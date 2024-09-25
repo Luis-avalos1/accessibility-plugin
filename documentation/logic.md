@@ -2,8 +2,19 @@
 
 # Accessibility Plug-In Logic 
 
-### Break Down 
+### Breakdown 
 
-We are creating a screen reader that should be allow an individual with sight impairments to be able to navigate a website via the screen reader. 
+We are creating a screen reader that should allow an individual with sight impairments to be able to navigate a website via the screen reader. 
 
-Logically 
+**********
+
+### Plug-in Breakdown 
+
+The code logic of the screen reader will be written in JavaScript. This JavaScript file will be hooked up to a PHP file that will enqueu the JS file to the website (WordPress). Additionally, with JS we have the capability to potentially create an interface utililzing CSS/other frameworks. 
+
+### JavaScript Screen Reader
+
+Utilizing Web Speech API. 
+
+
+
