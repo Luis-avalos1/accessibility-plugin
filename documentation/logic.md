@@ -8,7 +8,7 @@ We are creating a screen reader that should allow an individual with sight impai
 
 **********
 
-### Plug-in Breakdown 
+## Plug-in Breakdown 
 
 The code logic of the screen reader will be written in JavaScript. This JavaScript file will be hooked up to a PHP file that will enqueu the JS file to the website (WordPress). Additionally, with JS we have the capability to potentially create an interface utililzing CSS/other frameworks. 
 
@@ -18,11 +18,12 @@ Utilizing Web Speech API to implement Screen Reader.
 source: https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API
 
 
-Web Speech API is composed of two parts.__ 
+Web Speech API is composed of two parts.
+
 **(i): SpeechSynthesis: Text-to-Speech. We can utilize this to parse a website and produce a speech output.**\
 **(ii): SpeechRecognition: Speech Recognition. We can utilize this to make a user be able to navigate a websiter via speech. This would require us to alter the existing Lasagna Love to make it compatible for this API.**
 
-#### SpeechRecongnition 
+### SpeechRecongnition 
 
 
 
