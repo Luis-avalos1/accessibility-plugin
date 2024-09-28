@@ -18,9 +18,8 @@ Utilizing Web Speech API to implement Screen Reader.
 source: https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API
 
 
-Web Speech API is composed of two parts. 
-**(i): SpeechSynthesis: Text-to-Speech. We can utilize this to parse a website and produce a speech output.**
-
+Web Speech API is composed of two parts.__ 
+**(i): SpeechSynthesis: Text-to-Speech. We can utilize this to parse a website and produce a speech output.**\
 **(ii): SpeechRecognition: Speech Recognition. We can utilize this to make a user be able to navigate a websiter via speech. This would require us to alter the existing Lasagna Love to make it compatible for this API.**
 
 #### SpeechRecongnition 
