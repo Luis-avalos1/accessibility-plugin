@@ -15,7 +15,8 @@ The code logic of the screen reader will be written in JavaScript. This JavaScri
 ### JavaScript Screen Reader
 
 Utilizing Web Speech API to implement Screen Reader.
-source: https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API
+
+*WebSpeech API*: https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API
 
 
 Web Speech API is composed of two parts.
