@@ -30,17 +30,28 @@ Web Speech API is composed of two parts.
 ### Plug-in Architecture 
 
 accessible-web-enhancements/
+
 │
 ├── accessible-web-enhancements.php     # Main plugin file with initialization code
+
 │
 ├── css/                                # Stylesheet directory
-│   └── awe-styles.css                  # Main CSS file with styles for the toolbar and features
+
+│   └── awe-styles.css                  # Main CSS file with styles for 
+the toolbar and features
+
 │
 ├── js/                                 # JavaScript directory
-│   └── awe-scripts.js                  # Main JS file with all the accessibility features
+
+│   └── awe-scripts.js                  # Main JS file with all the 
+accessibility features
+
 │
 ├── templates/                          # Templates directory
-│   └── toolbar.php                     # HTML template for the accessibility toolbar
+
+│   └── toolbar.php                     # HTML template for the 
+accessibility toolbar
+
 │
 └── README.txt                          # Optional documentation file
 
