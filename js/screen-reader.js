@@ -3,22 +3,29 @@
     
     // TODO: need a func that stops the read, we cant read all website at once
     // TODO: implement keyboard navigation
-    // TODO: implement voice nav , need a function to stopp gettng input
-    // TODO: handling errors
+    // TODO: implement voice nav -> requires audio input, need a function to stopp gettng audio input
+    // TODO: handling errors --> this needs to be more thought out.
+    // TODO: FEATURE: toolbar to navigate features --> could be done in PHP with CSS styling, this may be the easiest way. 
     // TODO: FEATURE: color mode funct for color blindness
     // TODO: FEATURES : adjusting text size , line spacing, dyslexia friendly font
-    // TODO: --> animation for pausing  POTENTIALLY
-    // TODO: event listeners
+    // TODO: --> animation for pausing  POTENTIAL FEATURE: 
+    
+    // TODO: event listeners [FEATURES]
         // TODO: toggling screen reader 
         // TODO: toggle key board nav 
         // TODO: toggel voice nav
         // TODO: toggel color mode 
-        // TODO: font size, line spacing, dyslexia font , animatations
+        // TODO: font size
+        // TODO: line spacing
+        // TODO: dyslexia font 
+        // TODO: animatations
 
     // TODO: Im sure there is more func and stuff I havent thought of --> add what you think what else needs to be done 
     
-// screen reader logic 
 
+
+
+// screen reader logic 
 // IIFE function, so we can reduce global scope pollution
 (function(){
 
@@ -29,6 +36,7 @@
     let EnableDyslexiaFont =    false;
     let EnableAnimatiosPause =  false;
 
+    // AS OF NOW : this feature is a maybe, will be executed if time permits, but would be nice
     // custom settings ---> init set to default, users if needed can change these
     let fontSize = 100;
     let letterSpac = 0;
@@ -91,10 +99,16 @@
                 document.querySelector('.elementor-section-wrap') ||
                 document.querySelector('.elementor-widget-container');
             }
-            
 
+
+            // TODO: If still not found --> BODY CONTENT
             // if we still have content, we will try and get it from body
-            // TODO: finsih code, that reads body of website if we cannot get main cont above\
+            // BODY CONTENT
+
+
+
+
+            // TODO: If still not found go to BODY TEXT
 
             // CODE HERE, ---> NOT DONE
             // TODO: finish this --> way more to be added 
@@ -108,5 +122,5 @@
 
 
 
-})
+}) // end of function
 
