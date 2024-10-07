@@ -1,6 +1,6 @@
     
     // [LIST OF WHAT NEEDS TO BE DONE] ---> more below in code.
-    
+    // TODO: webspeech API broweser support --> there may be a few browsers that dont support this api, we may need to think of a work around this edge case.
     // TODO: need a func that stops the read, we cant read all website at once
     // TODO: implement keyboard navigation
     // TODO: implement voice nav -> requires audio input, need a function to stopp gettng audio input
@@ -22,6 +22,10 @@
 
     // TODO: Im sure there is more func and stuff I havent thought of --> add what you think what else needs to be done 
     
+    // other docs
+    // TODO: CSS stlyes page 
+    // TODO: php enque script 
+    // TODO: php template for toolbar --> located in templates directory 
 
 
 
