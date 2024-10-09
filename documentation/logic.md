@@ -55,3 +55,12 @@ accessibility toolbar
 │
 └── README.txt                          # Optional documentation file
 
+
+
+### Licensing 
+
+OpenDyslexic font used under the SIL Open Font License (OFL).
+
+OpenDyslexic by Abelardo Gonzalez
+Website: https://opendyslexic.org/
+License: https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL_web
