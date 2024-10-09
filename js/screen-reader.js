@@ -31,6 +31,8 @@
 // IIFE function, so we can reduce global scope pollution
 (function(){
 
+    'use strict';
+
     // current state variable --> is feature: enabled or disabled?
     let EnableKeyboardNav =     false;
     let EnableVoiceInput =      false;
@@ -115,12 +117,81 @@
             // CODE HERE, ---> NOT DONE
             // TODO: finish this --> way more to be added 
             
-        }
+        },
 
         // TODO: more functions go below here!
+        stopReading: function() {
+            if(this.synth.speaking) {
+                this.synth.cancel();
+            }
+        } 
+
+    }; // end of screen reader obj
+
+    // TODO: Finish, currenty (10/8) bare object not much to it as of now --> FOR ALL THE OBJ BELOW
+    const keyboardNavigation = {
+
+        // initializer funciton 
+        init: function(){
+            // TODO: finish this, --> needs research! 
+            document.addEventListener('keydown', FINISHMEEEE)
+        }
+    };
+
+    // TODO: POTENTIAL FEATURE, if not working well we will proceed without it.
+    const voiceInput = {
+
+        voiceRecognition: null, 
+        
+        // init funct 
+        init: function () {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+            // if not supported
+            if(!SpeechRecognition){
+                console.warn ("Error: Voice recognition is not supported on your current browser.");
+                return;
+            }
+
+            // IS SUPPORTED
+            // TODO: FINISH!! 
+            this.voiceRecognition = new SpeechRecognition();
+                
+        }, 
+
+        start: function(){
+            if(EnableVoiceInput && speechRecognitionSuppot && this.voiceRecognition){
+                // TODO: FINISH LOGIC --> Needs to be more thought out, so many edge cases to consider
+            }
+        }, 
+
+        stop: function () {
+            if(this.voiceRecognition){
+                this.voiceRecognition.stop();
+            }
+        }, 
 
 
-    } // end of screen reader obj
+        // TODO: Finish 
+        // we want a fuction that will handle the results, and do some action --> based on our voice input
+        voiceInputCommand: function(event) {
+
+        }
+
+
+
+
+
+    }; // end of voice input obk 
+
+    const adjustTextSize = {
+
+        // TODO: FINISH CODE 
+        increase: function() {
+            fontSize+ 10;
+        }
+
+    }
 
 
 

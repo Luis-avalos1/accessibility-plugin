@@ -6,7 +6,6 @@
 
 
 /* instantiating OpenDyslexic fonts  */
-
 @font-face { /* REGULAR FONT */
     font-family: 'OpenDyslexic';
     src: url("../fonts/OpenDyslexic-Regular.woff2") format('woff2'), 
