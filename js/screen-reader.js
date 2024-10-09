@@ -27,8 +27,6 @@
     // TODO: php enque script 
     // TODO: php template for toolbar --> located in templates directory 
 
-
-
 // screen reader logic 
 // IIFE function, so we can reduce global scope pollution
 (function(){
@@ -122,7 +120,7 @@
         // TODO: more functions go below here!
 
 
-    } // end of screen reader 
+    } // end of screen reader obj
 
 
 

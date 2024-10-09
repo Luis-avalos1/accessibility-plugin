@@ -1,6 +1,7 @@
 
-/* we want to import fonts for our 'dyslexia font' feature, we can do this via Google's OpenDyslexic font */
-/* TODO: Fix this! currently not working */
-@import url('https://fonts.googleapis.com/css?family=OpenDyslexic');
+/* we want to have it so users can use dyslexia fonts if needed.  */
+/* TODO FIXED:  we can host the files locally, --> we no longer rely on external dependencies */
+/* THese are hosted in the fonts dir */
+
 
 
