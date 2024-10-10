@@ -37,7 +37,7 @@
     let EnableKeyboardNav =     false;
     let EnableVoiceInput =      false;
     let EnableScreenReader =    false;
-    let EnableDyslexiaFont =    false;
+    let EnableOpenDyslexiaFont =false;
     let EnableAnimatiosPause =  false;
 
     // AS OF NOW : this feature is a maybe, will be executed if time permits, but would be nice
@@ -186,10 +186,105 @@
 
     const adjustTextSize = {
 
-        // TODO: FINISH CODE 
+        // TODO: TEST THIS CODE, finished as of now --> but we will see after testing if any revision are needed. 
         increase: function() {
-            fontSize+ 10;
+            fontSize+= 10;
+
+            // check if font, hasnt and will not exceed our limit font size 
+            if(fontSize > 200){
+                fontSize = 200;
+            }
+            // set font size 
+            document.documentElement.style.fontSize = fontSize + '%';
+            localStorage.setItem("change-font-size", fontSize);
+        },
+
+        // decreas font size function 
+        decrease: function() {
+            // limiting the amount we can decrease the font
+            fontSize = Math.max(40, fontSize - 10);
+            document.documentElement.style.fontSize = fontSize + '%';
+            localStorage.setItem("change-font-size", fontSize);
+
+        }, 
+
+        // load font size 
+        loadFontSize: function() {
+            // we want a field that wil save the current font size that will get displayed
+            const savedFontSize = localStorage.getItem("change-font-size");
+
+            if(savedFontSize){
+                fontSize = parseInt(savedFontSize, 10);
+                document.documentElement.style.fontSize = fontSize + '%';
+            }
         }
+    }; // end of adjust text size 
+
+    const adjusSpacing = {
+
+        // incrase line spacing funct 
+        increase: function() {
+            // increment with these value at each adjustment 
+            letterSpac+=0.5;
+            lineHeight += 0.1;
+
+            document.body.style.letterSpacing = letterSpac + 'px';
+            document.body.style.lineHeight = lineHeight;
+
+            localStorage.setItem('adjust-letter-spacing', letterSpac);
+            localStorage.setItem('adjust-line-spacing', lineHeight);
+
+        }, 
+
+        decrease: function() {
+            //  decrease limit 
+            letterSpac = Math.max(0, letterSpac - 0.5);
+            lineHeight = Math.max(1.0, lineHeight - 0.1);
+            
+            document.body.style.letterSpacing = letterSpac + 'px';
+            document.body.style.lineHeight = lineHeight;
+
+            localStorage.setItem('adjust-letter-spacing', letterSpac);
+            localStorage.setItem('adjust-line-spacing', lineHeight);
+
+        }, 
+
+        loadSpacing: function() {
+
+            const savedLetter = localStorage.getItem('adjust-letter-spacing');
+            const savedHeight = localStorage.getItem('adjust-line-spacing');
+            
+            if(savedLetter) {
+                letterSpac = parseFloat(savedLetter);
+                document.body.style.letterSpacing = letterSpac;
+            }
+
+            if(savedHeight) {
+                lineHeight = parseFloat(savedHeight);
+                document.body.style.lineHeight  = lineHeight;
+            }
+        }
+
+    }; 
+
+    // dyslexia font 
+    const OpenDyslexiaFont = {
+
+        toggle: function() {
+            // enable O.D font --> inverse, since set to false;
+            EnableOpenDyslexiaFont = !EnableOpenDyslexiaFont;
+
+            if(EnableOpenDyslexiaFont){
+                document.body.classList.add("Open-Dyslexia-Font");
+                localStorage.setItem("Open-Dyslexia-Font", 'true');
+            }else {
+                document.body.classList.remove("Open-Dyslexia-Font");
+                localStorage.setItem("Open-Dyslexia-Font", 'false');
+            }
+        }, 
+
+        // load font 
+        
 
     }
 
