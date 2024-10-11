@@ -38,7 +38,7 @@
     let EnableVoiceInput =      false;
     let EnableScreenReader =    false;
     let EnableOpenDyslexiaFont =false;
-    let EnableAnimatiosPause =  false;
+    let EnableAnimatiosPause =  false; // potentially a feature, time permitting 
 
     // AS OF NOW : this feature is a maybe, will be executed if time permits, but would be nice
     // custom settings ---> init set to default, users if needed can change these
@@ -50,7 +50,7 @@
     // PRECHECK: check if browswer support WebSpeech APIs
     const speechSynthSupport = 'speechSynthesis' in window;
     const speechRecognitionSuppot = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
-
+    
 
     // if supported we can continue 
     // Screen Reader Logic Start 
@@ -184,6 +184,8 @@
 
     }; // end of voice input obk 
 
+
+    // TODO: NEEDS TESTING
     const adjustTextSize = {
 
         // TODO: TEST THIS CODE, finished as of now --> but we will see after testing if any revision are needed. 
@@ -220,6 +222,7 @@
         }
     }; // end of adjust text size 
 
+    // TODO: NEEDS TESTING 
     const adjusSpacing = {
 
         // incrase line spacing funct 
@@ -267,6 +270,7 @@
 
     }; 
 
+    // TODO: NEEDS finishing --> loading font 
     // dyslexia font 
     const OpenDyslexiaFont = {
 
@@ -284,9 +288,9 @@
         }, 
 
         // load font 
-        
 
-    }
+
+    };
 
 
 
