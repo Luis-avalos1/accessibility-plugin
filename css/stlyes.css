@@ -1,6 +1,6 @@
 
 /* we want to have it so users can use dyslexia fonts if needed.  */
-/* TODO FIXED:  we can host the files locally, --> we no longer rely on external dependencies */
+/* TODO [FIXED]:  we can host the files locally, --> we no longer rely on external dependencies */
 /* THese are hosted in the fonts dir */
 
 
@@ -62,4 +62,77 @@
 body.accesibility-dyslexia-fonts {
     font-family: 'OpenDyslexic', Arial, Helvetica, sans-serif !important;
 }
+
+/* TODO: Fix any color or sizes --> this wil prolly look bad not good at css / artsy */
+/* TOOL BAR */
+#toolbar {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background-color: rgba(255, 255, 255, 0.98);
+    border-radius: 10px;
+    padding: 20px;
+    z-index: 10000;
+    box-shadow: 0 4px 15px rgba(0,0,0, 0.1);
+    font-family: Arial, Helvetica, sans-serif;
+    width: 280px;
+    transition: all 0.3s ease-in-out;
+}
+
+#toolbar:hover {
+    box-shadow: 0 4px 18px rgba(0,0,0, 0.15);
+}
+#toolbar:focus{
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123,255, 0.5);
+}
+/* TOOL BAR buttons */
+.toolbar-button {
+    background-color: lightblue;
+    border: none;
+    border-radius: 8px;
+    margin: 6px 0 ;
+    padding: 10px 15px;
+    font-size: 15px;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.toolbar-button:hover{
+    background-color: #0056b3;
+}
+.toolbar-button:focus{
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123,255, 0.5);
+}
+
+/* select wrapping */
+.select-wrapping {
+    margin: 10px 0;
+}
+.select-wrapping label{
+    display: block;
+    font-size: 15px;
+    margin-bottom: 5px;
+    color: darkslategrey;
+}
+.select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #CCCCCC;
+    border-radius: 8px;
+    font-size: 15px;
+    background-color: white;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg%20xmlns="http://www.w3.org/2000/svg"%20viewBox="0%200%204%205"><polygon%20points="2,0%204,5%200,5"%20style="fill:%23CCCCCC;"/></svg>');
+    background-image: no-repeat;
+    background-position: right 8px center;
+    background-size: 8px 10px;
+}
+.select:focus{
+    outline: none;
+    border-color: lightskyblue;
+    box-shadow: 0 0 0 3px rgba(0, 123,255, 0.25);
+}
+
 
