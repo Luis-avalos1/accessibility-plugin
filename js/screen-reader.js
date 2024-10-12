@@ -1,31 +1,35 @@
     
     // [LIST OF WHAT NEEDS TO BE DONE] ---> more below in code.
-    // TODO: webspeech API broweser support --> there may be a few browsers that dont support this api, we may need to think of a work around this edge case.
-    // TODO: need a func that stops the read, we cant read all website at once
-    // TODO: implement keyboard navigation -> I'll take this on right now (Isaac Quintanilla)
-    // TODO: implement voice nav -> requires audio input, need a function to stopp gettng audio input
-    // TODO: handling errors --> this needs to be more thought out.
-    // TODO: FEATURE: toolbar to navigate features --> could be done in PHP with CSS styling, this may be the easiest way. 
-    // TODO: FEATURE: color mode funct for color blindness
-    // TODO: FEATURES : adjusting text size , line spacing, dyslexia friendly font
-    // TODO: --> animation for pausing  POTENTIAL FEATURE: 
-    
+    // TODO (1): webspeech API broweser support --> there may be a few browsers that dont support this api, we may need to think of a work around this edge case.
+    // TODO (2): need a func that stops the read, we cant read all website at once
+    // TODO (3): implement keyboard navigation -> I'll take this on right now (Isaac Quintanilla)
+    // TODO (4): implement voice nav -> requires audio input, need a function to stopp gettng audio input
+    // TODO (5): handling errors --> this needs to be more thought out.
+    // TODO (6): FEATURE: toolbar to navigate features --> could be done in PHP with CSS styling, this may be the easiest way. 
+    // TODO (7): FEATURE: color mode funct for color blindness
+    // TODO (8): FEATURES : adjusting text size , line spacing, dyslexia friendly font
+    // TODO (9): --> animation for pausing  POTENTIAL FEATURE: 
+    // TODO (18): Finish Color Mode Feature 
+
     // TODO: event listeners [FEATURES]
-        // TODO: toggling screen reader 
-        // TODO: toggle key board nav 
-        // TODO: toggel voice nav
-        // TODO: toggel color mode 
-        // TODO: font size
-        // TODO: line spacing
-        // TODO: dyslexia font 
-        // TODO: animatations
+        // TODO (10): toggling screen reader 
+        // TODO (11): toggle key board nav 
+        // TODO (12): toggel voice nav
+        // TODO (13): toggel color mode 
+        // TODO (14): font size
+        // TODO (15): line spacing
+        // TODO (16): dyslexia font 
+        // TODO (17): animatations
 
     // TODO: Im sure there is more func and stuff I havent thought of --> add what you think what else needs to be done 
     
     // other docs -- more detail located within their respected files!
-    // TODO: CSS stlyes page 
+    // TODO : CSS stlyes page 
     // TODO: php enque script 
     // TODO: php template for toolbar --> located in templates directory 
+
+    
+
 
 // screen reader logic 
 // IIFE function, so we can reduce global scope pollution
@@ -218,12 +222,9 @@
                 focusedElement.style.display = 'none';
             }
         },
-    };
+    }; // end of keyboad nav
 
-    // Initialize keyboard navigation when page loads
-    document.addEventListener('DOMContentLoaded', () => {
-        keyboardNavigation.init();
-    })
+
 
     // TODO: POTENTIAL FEATURE, if not working well we will proceed without it.
     const voiceInput = {
@@ -375,9 +376,73 @@
         }, 
 
         // load font 
-
+        loadDyslexiaFont: function() {
+            const savedFont = localStorage.getItem('Open-Dyslexia-Font') === 'true';
+            if(savedFont){
+                EnableOpenDyslexiaFont = true;
+                document.body.classList.add('Open-Dyslexia-Font');
+            }
+        }
 
     };
+
+    // color mode feature --> protanopia, deuteranopia, tritanopia, high-contrast
+
+    // TODO: Finish
+    const colorMode = {
+
+        // setting mode --> remove any current color mode  
+        setColorMode: function(mode){
+            document.body.classList.remove('color-mode-tritanopia','color-mode-highconstrast', 'color-mode-protanopia', 'color-mode-deuteranopia' );
+            
+            // setting our desired color mode --> checks to see if we have requested something other than the default color mode curr set
+            if(mode !== 'default'){
+                document.body.classList.add('color-mode-${mode}');
+            }
+            
+            // reset to default color mode mechanism 
+            if(mode == 'reset'){
+                mode = 'default';
+            }
+
+            localStorage.setItem('color-mode', mode);
+
+        },
+
+        loadColorMode: function() {
+
+            // save our current mode 
+            const savedColorMode = localStorage.getItem('color-mode') || 'default';
+            // fetch and apply 
+            this.setColorMode(savedColorMode);
+
+            const selectColorMode = document.getElementById('color-mode-select');
+            if(selectColorMode){
+                selectColorMode.value = savedColorMode;
+            }
+
+
+        }
+        
+
+    }
+
+
+
+    //  [  EVENT LISTENERS FOR TOGGLING ]
+
+    document.addEventListener('DOMContentLoaded', function (){
+
+        // cust setting
+        adjustTextSize.loadFontSize();
+        adjusSpacing.loadSpacing();
+        OpenDyslexiaFont.loadDyslexiaFont();
+        colorMode.loadColorMode();
+
+        // toggling below
+
+
+    })
 
 
 

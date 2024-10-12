@@ -135,4 +135,17 @@ body.accesibility-dyslexia-fonts {
     box-shadow: 0 0 0 3px rgba(0, 123,255, 0.25);
 }
 
+/* TODO: Finish */
+/* Color mode  */
+body.color-mode-protanopia {
+    filter: url('#protanopia');
+}
+
+body.color-mode-tritanopia {
+    filter: url('#tritanopia');
+}
+
+body.color-mode-tritanopia {
+    filter: url('#tritanopia');
+}
 
