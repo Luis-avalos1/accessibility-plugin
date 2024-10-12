@@ -2,7 +2,7 @@
     // [LIST OF WHAT NEEDS TO BE DONE] ---> more below in code.
     // TODO: webspeech API broweser support --> there may be a few browsers that dont support this api, we may need to think of a work around this edge case.
     // TODO: need a func that stops the read, we cant read all website at once
-    // TODO: implement keyboard navigation
+    // TODO: implement keyboard navigation -> I'll take this on right now (Isaac Quintanilla)
     // TODO: implement voice nav -> requires audio input, need a function to stopp gettng audio input
     // TODO: handling errors --> this needs to be more thought out.
     // TODO: FEATURE: toolbar to navigate features --> could be done in PHP with CSS styling, this may be the easiest way. 
@@ -130,13 +130,100 @@
 
     // TODO: Finish, currenty (10/8) bare object not much to it as of now --> FOR ALL THE OBJ BELOW
     const keyboardNavigation = {
+        // store currently focused element
+        currentFocusedElement: null,
 
         // initializer funciton 
         init: function(){
-            // TODO: finish this, --> needs research! 
-            document.addEventListener('keydown', FINISHMEEEE)
-        }
+            // Set up an event listener for keydown events
+            document.addEventListener('keydown', this.handleKeyDown.bind(this))
+        },
+
+        // Keydown event handler
+        handleKeyDown: function(event) {
+            // switch case for different key presses
+            switch(event.key) {
+                case 'Tab':
+                    this.handleTab(event);
+                    break;
+                case 'ArrowUp':
+                    this.navigate('previous');
+                    break;
+                case 'ArrowDown':
+                    this.navigate('next');
+                    break;
+                case 'Enter':
+                    this.activateCurrentElement();
+                    break;
+                case 'Escape':
+                    this.closeFocusedElement();
+                    break;
+                default:
+                    break;
+
+            }
+        },
+
+        // Handle Tab key for focused element
+        handleTab: function(event) {
+            const focusableElements = this.getFocusableElements();
+            const currentIndex = focusableElements.indexOf(document.activeElement);
+
+            // Determine next focusable element based on whether Shift is pressed (for reverse Tab)
+            let nextIndex = event.shiftKey ? currentIndex - 1 : currentIndex + 1;
+
+            // Circular navigation
+            if (nextIndex < 0) nextIndex = focusableElements.length - 1;
+            if (nextIndex > focusableElements.length) nextIndex = 0;
+
+            focusableElements[nextIndex].focus();
+            event.preventDefault(); // Prevent the default tab behavior
+        },
+
+        // Get all focusable elements on the page
+        getFocusableElements: function() {
+            return Array.from(document.querySelectorAll(
+                'a, button, input, [tabindex]:not([tabindex="-1"])'
+            )).filter(el => !el.hasAttribute('disabled')) // Filter out disabled elements
+        },
+
+        // Navigate between sections using Arrow Keys
+        navigate: function(direction) {
+            const focusableElements = this.getFocusableElements();
+            const currentIndex = focusableElements.indecOf(document.activeElement);
+            let nextIndex;
+
+            if (direction === 'previous') {
+                nextIndex = currentIndex > 0 ? currentIndex - 1 : focusableElements.length - 1;
+            } else {
+                nextIndex = currentIndex < focusableElements.length - 1 ? currentIndex + 1 : 0;
+            }
+
+            focusableElements[nextIndex].focus();
+        },
+
+        // Activate currently focused element (for Enter Key)
+        activateCurrentElement: function() {
+            if (document.activeElement && typeof document.activeElement.click === 'function') {
+                document.activeElement.click();
+            }
+        },
+
+        // Close or cancel (for Escape Key)
+        closeFocusedElement: function() {
+            const focusedElement = document.activeElement;
+
+            // Example: if a model or pop-up is focused, you might want to close it
+            if(focusedElement && focusedElement.classList.contains('modal')) {
+                focusedElement.style.display = 'none';
+            }
+        },
     };
+
+    // Initialize keyboard navigation when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        keyboardNavigation.init();
+    })
 
     // TODO: POTENTIAL FEATURE, if not working well we will proceed without it.
     const voiceInput = {

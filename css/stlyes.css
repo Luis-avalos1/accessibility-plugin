@@ -83,7 +83,7 @@ body.accesibility-dyslexia-fonts {
     box-shadow: 0 4px 18px rgba(0,0,0, 0.15);
 }
 #toolbar:focus{
-    outline: none;
+    outline: 2px midnightblue;
     box-shadow: 0 0 0 3px rgba(0, 123,255, 0.5);
 }
 /* TOOL BAR buttons */
