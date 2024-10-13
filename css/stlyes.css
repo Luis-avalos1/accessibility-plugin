@@ -148,4 +148,31 @@ body.color-mode-tritanopia {
 body.color-mode-tritanopia {
     filter: url('#tritanopia');
 }
+body.high-contrast {
+    --background-color: #000000;
+    --text-color: #FFFFFF;
+    --link-color: #00FFFF;
+    --button-background: #333333;
+    --button-text: #FFFFFF;
+}
+
+body.color-mode-default{
+    filter: none;
+}
+
+/* TODO: lets see how this looks in testing --> if it can look better we will use */
+/* Protanopia Simulation */
+body.protanopia {
+    filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(300%);
+}
+
+/* Deuteranopia Simulation */
+body.deuteranopia {
+    filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(200%);
+}
+
+/* Tritanopia Simulation */
+body.tritanopia {
+    filter: grayscale(100%) sepia(100%) hue-rotate(50deg) saturate(300%);
+}
 
