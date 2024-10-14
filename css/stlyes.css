@@ -87,7 +87,7 @@ body.accesibility-dyslexia-fonts {
     box-shadow: 0 0 0 3px rgba(0, 123,255, 0.5);
 }
 /* TOOL BAR buttons */
-.toolbar-button {
+.accessibility-button {
     background-color: lightblue;
     border: none;
     border-radius: 8px;
@@ -98,10 +98,10 @@ body.accesibility-dyslexia-fonts {
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
-.toolbar-button:hover{
+.accessibility-button:hover{
     background-color: #0056b3;
 }
-.toolbar-button:focus{
+.accessibility-button:focus{
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 123,255, 0.5);
 }

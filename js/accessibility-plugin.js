@@ -367,7 +367,7 @@
             EnableOpenDyslexiaFont = !EnableOpenDyslexiaFont;
 
             if(EnableOpenDyslexiaFont){
-                document.body.classList.add("Open-Dyslexia-Font");
+                document.body.classList.add("accesibility-dyslexia-fonts");
                 localStorage.setItem("Open-Dyslexia-Font", 'true');
             }else {
                 document.body.classList.remove("Open-Dyslexia-Font");
@@ -397,7 +397,7 @@
             
             // setting our desired color mode --> checks to see if we have requested something other than the default color mode curr set
             if(mode !== 'default'){
-                document.body.classList.add('color-mode-${mode}');
+                document.body.classList.add(`color-mode-${mode}`);
             }
             
             // reset to default color mode mechanism 
@@ -445,7 +445,7 @@
         // toggle 
 
         // color mode toggle 
-        const colorModeToggle = document.getElementById('color-mode-select');
+        const colorModeToggle = document.getElementById('awe-color-mode-select');
         if(colorModeToggle) {
             colorMode.addEventListener('change', function(){
                 colorMode.setColorMode(this.value);
@@ -478,7 +478,7 @@
         const decreaseSpacingButton = document.getElementById('decrease-spacing');
         if(decreaseSpacingButton){
             decreaseSpacingButton.addEventListener('click', function() {
-                adjusSpacing.increase();
+                adjusSpacing.decrease();
             });
         }
 
@@ -487,8 +487,8 @@
         if(dyslexiaFontToggle){
             dyslexiaFontToggle.addEventListener('click', function(){
                 OpenDyslexiaFont.toggle();
-                this.textContent = EnableOpenDyslexiaFont ? 'Dyslexia Font (On)' : 'Dyslexia Font';
-                dyslexiaFontToggle.setAttribute('aria-pressed', EnableOpenDyslexiaFont.toString());
+                dyslexiaFontToggle.textContent = enableOpenDyslexiaFont ? 'Dyslexia Font (On)' : 'Dyslexia Font';
+                dyslexiaFontToggle.setAttribute('aria-pressed', enableOpenDyslexiaFont.toString());
             });
             // init button text 
             this.textContent = EnableOpenDyslexiaFont ? 'Dyslexia Font (On)' : 'Dyslexia Font';

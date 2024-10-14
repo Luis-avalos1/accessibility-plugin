@@ -26,15 +26,12 @@ if(!defined('ABSPATH')){
 function enqueue_scripts(){
 
         wp_enqueue_style(
-                'styles',
-                plugin_dir_url( __FILE__ ) . 'css/styles.css',
-                array(),
-                '1.0',
-                'all'
+                'plugin-css',
+                plugin_dir_url( __FILE__ ) . 'css/styles.css'
         );
 
         wp_enqueue_script(
-                'accessibility-plugin', 
+                'plugin-js', 
                 plugin_dir_url( __FILE__ ) . 'js/accessibility-plugin.js',
                 array(),
                 '1.0',
