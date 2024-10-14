@@ -442,7 +442,61 @@
         // toggling below
 
 
-    })
+        // toggle 
+
+        // color mode toggle 
+        const colorModeToggle = document.getElementById('color-mode-select');
+        if(colorModeToggle) {
+            colorMode.addEventListener('change', function(){
+                colorMode.setColorMode(this.value);
+            });
+        }
+
+        // font size toggles
+        const increaseFontSizeButton = document.getElementById('increase-text-size');
+        if(increaseFontSizeButton){
+            increaseFontSizeButton.addEventListener('click', function() {
+                adjustTextSize.increase();
+            });
+        }
+        
+        const decreaseFontSizeButton = document.getElementById('decrease-text-size');
+        if(decreaseFontSizeButton){
+            decreaseFontSizeButton.addEventListener('click', function() {
+                adjustTextSize.decrease();
+            });
+        }
+
+        // spacing toggle
+        const increaseSpacingButton = document.getElementById('increase-spacing');
+        if(increaseSpacingButton){
+            increaseSpacingButton.addEventListener('click', function() {
+                adjusSpacing.increase();
+            });
+        }
+
+        const decreaseSpacingButton = document.getElementById('decrease-spacing');
+        if(decreaseSpacingButton){
+            decreaseSpacingButton.addEventListener('click', function() {
+                adjusSpacing.increase();
+            });
+        }
+
+        // dyslexia font toggel
+        const dyslexiaFontToggle = document.getElementById('dyslexia-font-toggle');
+        if(dyslexiaFontToggle){
+            dyslexiaFontToggle.addEventListener('click', function(){
+                OpenDyslexiaFont.toggle();
+                this.textContent = EnableOpenDyslexiaFont ? 'Dyslexia Font (On)' : 'Dyslexia Font';
+                dyslexiaFontToggle.setAttribute('aria-pressed', EnableOpenDyslexiaFont.toString());
+            });
+            // init button text 
+            this.textContent = EnableOpenDyslexiaFont ? 'Dyslexia Font (On)' : 'Dyslexia Font';
+            dyslexiaFontToggle.setAttribute('aria-pressed', EnableOpenDyslexiaFont.toString());
+        }
+
+
+    }) // end of event listeners/toggle section
 
 
 
