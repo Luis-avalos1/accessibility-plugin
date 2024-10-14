@@ -33,8 +33,8 @@ function enqueue_scripts(){
         );
 
         wp_enqueue_script(
-                'screen-reader', 
-                plugin_dir_url( __FILE__ ) . 'js/screen-reader.js',
+                'accessibility-plugin', 
+                plugin_dir_url( __FILE__ ) . 'js/accessibility-plugin.js',
                 array(),
                 '1.0',
                 true
