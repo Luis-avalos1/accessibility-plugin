@@ -1,12 +1,13 @@
 
-<?php 
 
+<?php
 /*
-Plugin Name As of now, subject to change: Accessibility Plug In
-Description: Plug in for LasagnaLove.com to enhance and provide their users with accesibility features: screen reader, adjusting font size, line height, letter spacing, displayin a dyslexia font, adjust color modes, navigate via keyboard arrows, voice nav. 
-Version: 1.0 
+Plugin Name: Accessibility Plugin
+Description: A plugin to improve Lasagna Love's website accessibility.
+Version: 1.0
 Author: Luis Avalos
 */
+
 
 
 // we want to create a method that enqueues our custome JS filer
@@ -47,4 +48,6 @@ function display_toolbar(){
 }
 
 add_action('wp_footer','display_toolbar');
+
+
 
