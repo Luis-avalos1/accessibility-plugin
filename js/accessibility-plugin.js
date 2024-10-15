@@ -24,7 +24,8 @@
     // TODO Im sure there is more func and stuff I havent thought of --> add what you think what else needs to be done 
     
 
-
+    
+    // TODO IMPORTANT
     // TODO TEST EVERYTHING
         // TODO Current Issue, i theorize that the css and js files are not being correctly loaded, cannot find them 
                 // TODO when i inspect element in test site --> I believe they should still appear
@@ -255,12 +256,26 @@
             // IS SUPPORTED
             // TODO: FINISH!! 
             this.voiceRecognition = new SpeechRecognition();
+            this.voiceRecognition.continuous = true;
+            this.voiceRecognition.interimResults = false;
+            this.voiceRecognition.lang = document.documentElement.lang || 'en-US';
+            this.voiceRecognition.onresult = this.voiceInputCommand.bind(this);
+
+            this.voiceRecognition.onerror = function(event) {
+                console.error('Voice Recognition Error: ', event.error);
+            };
                 
         }, 
 
         start: function(){
             if(EnableVoiceInput && speechRecognitionSuppot && this.voiceRecognition){
-                // TODO: FINISH LOGIC --> Needs to be more thought out, so many edge cases to consider
+
+                try{
+                    this.voiceRecognition.start();
+                }catch(error){
+                    console.error("Voice Recognition Start Error: ", error);
+                }
+
             }
         }, 
 
@@ -274,6 +289,21 @@
         // TODO: Finish 
         // we want a fuction that will handle the results, and do some action --> based on our voice input
         voiceInputCommand: function(event) {
+
+            // TODO: finish this --> null is a place holder
+            const inputTranscript = null ;
+
+            // TODO: this is bare bones, maybe there is better way?
+            if(inputTranscript.includes('scroll down')) {
+                window.scrollBy(0,100);
+            }else if (inputTranscript.includes('scroll up')){
+                window.scrollBy(0, -100)
+            }
+            // TODO: finsh
+
+
+
+
 
         }
 
@@ -377,10 +407,10 @@
             EnableOpenDyslexiaFont = !EnableOpenDyslexiaFont;
 
             if(EnableOpenDyslexiaFont){
-                document.body.classList.add("accesibility-dyslexia-fonts");
+                document.body.classList.add('accesibility-dyslexia-fonts');
                 localStorage.setItem("Open-Dyslexia-Font", 'true');
             }else {
-                document.body.classList.remove("Open-Dyslexia-Font");
+                document.body.classList.remove('accesibility-dyslexia-fonts');
                 localStorage.setItem("Open-Dyslexia-Font", 'false');
             }
         }, 
@@ -390,7 +420,7 @@
             const savedFont = localStorage.getItem('Open-Dyslexia-Font') === 'true';
             if(savedFont){
                 EnableOpenDyslexiaFont = true;
-                document.body.classList.add('Open-Dyslexia-Font');
+                document.body.classList.add('accesibility-dyslexia-fonts');
             }
         }
 
@@ -453,6 +483,30 @@
 
 
         // toggle 
+        // TODO: input correct id
+        const keyboardNavigationToggle = document.getElementById("");
+        if(keyboardNavigationToggle) {
+            keyboardNavigationToggle.addEventListener('click', function(){
+                EnableKeyboardNav = !EnableKeyboardNav;
+                if(EnableKeyboardNav){
+                    keyboardNavigation.init();
+                    this.textContent = 'Keyboard Navigation ON';
+                    this.setAttribute('aria-pressed', 'true');
+                    // TODO: Fill in correct id
+                    localStorage.setItem('', 'true');
+                }else{
+                    this.textContent = 'Keyboard Navigation OFF';
+                    this.setAttribute('aria-pressed', 'true');
+                    // TODO: Fill in correct id
+                    localStorage.setItem('', 'false');
+                }
+            });
+
+            // init button text 
+            keyboardNavigationToggle.textContent = EnableKeyboardNav ? 'Keyboard Navigation ON' : 'Keyboard Navigation OFF';
+            keyboardNavigationToggle.setAttribute = ('aria-pressed', EnableKeyboardNav.toString());
+
+        }
 
         // color mode toggle 
         const colorModeToggle = document.getElementById('awe-color-mode-select');
