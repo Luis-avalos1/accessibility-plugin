@@ -11,7 +11,7 @@
     // TODO (9): --> animation for pausing  POTENTIAL FEATURE: 
     // TODO (18): Finish Color Mode Feature 
 
-    // TODO: event listeners [FEATURES]
+    // TODO event listeners [FEATURES]
         // TODO (10): toggling screen reader 
         // TODO (11): toggle key board nav 
         // TODO (12): toggel voice nav
@@ -21,12 +21,23 @@
         // TODO (16): dyslexia font 
         // TODO (17): animatations
 
-    // TODO: Im sure there is more func and stuff I havent thought of --> add what you think what else needs to be done 
+    // TODO Im sure there is more func and stuff I havent thought of --> add what you think what else needs to be done 
     
+
+
+    // TODO TEST EVERYTHING
+        // TODO Current Issue, i theorize that the css and js files are not being correctly loaded, cannot find them 
+                // TODO when i inspect element in test site --> I believe they should still appear
+                    // TODO  Additionally, the toolbar has no styling nor functionality. 
+    
+
+
+
+
     // other docs -- more detail located within their respected files!
     // TODO : CSS stlyes page 
-    // TODO: php enque script 
-    // TODO: php template for toolbar --> located in templates directory 
+    // TODO php enque script 
+    // TODO php template for toolbar --> located in templates directory 
 
     
 
@@ -276,7 +287,6 @@
     // TODO: NEEDS TESTING
     const adjustTextSize = {
 
-        // TODO: TEST THIS CODE, finished as of now --> but we will see after testing if any revision are needed. 
         increase: function() {
             fontSize+= 10;
 
