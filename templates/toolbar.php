@@ -29,7 +29,7 @@
         <span class="accessibility-button-label">Dyslexia Font</span>
     </button>
 
-    <select id="awe-color-mode-select" class="awe-select" aria-label="Select Color Mode">
+    <select id="color-mode-select" class="select" aria-label="Select Color Mode">
         <option value="default">Default</option>
         <option value="protanopia">Protanopia</option>
         <option value="deuteranopia">Deuteranopia</option>

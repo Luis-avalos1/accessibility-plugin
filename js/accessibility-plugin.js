@@ -299,7 +299,8 @@
             }else if (inputTranscript.includes('scroll up')){
                 window.scrollBy(0, -100)
             }
-            // TODO: finsh
+            // TODO: finsh ---> handle feature toggline 
+            
 
 
 
