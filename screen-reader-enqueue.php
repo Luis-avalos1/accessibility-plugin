@@ -46,7 +46,10 @@ function display_toolbar(){
         include plugin_dir_path(__FILE__) .'templates/toolbar.php';
 }
 
-add_action('wp_footer','display_toolbar');
-
+if(function_exists('wp_body_open')) {
+        add_action('wp_body_open', 'display_toolbar');
+}else{
+        add_action('wp_head','display_toolbar');
+}
 
 

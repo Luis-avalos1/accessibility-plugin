@@ -125,7 +125,7 @@ body.accesibility-dyslexia-fonts {
     background-color: white;
     appearance: none;
     background-image: url('data:image/svg+xml;charset=US-ASCII,<svg%20xmlns="http://www.w3.org/2000/svg"%20viewBox="0%200%204%205"><polygon%20points="2,0%204,5%200,5"%20style="fill:%23CCCCCC;"/></svg>');
-    background-image: no-repeat;
+    background-repeat: no-repeat;
     background-position: right 8px center;
     background-size: 8px 10px;
 }
@@ -145,8 +145,8 @@ body.color-mode-tritanopia {
     filter: url('#tritanopia');
 }
 
-body.color-mode-tritanopia {
-    filter: url('#tritanopia');
+body.color-mode-deuteranopia {
+    filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(200%);
 }
 body.high-contrast {
     --background-color: #000000;
@@ -176,3 +176,16 @@ body.tritanopia {
     filter: grayscale(100%) sepia(100%) hue-rotate(50deg) saturate(300%);
 }
 
+body.color-mode-high-contrast {
+    background-color: var(--background-color, #000);
+    color: var(--text-color, #FFF);
+}
+
+body.color-mode-high-contrast a {
+    color: var(--link-color, #00FFFF);
+}
+
+body.color-mode-high-contrast button {
+    background-color: var(--button-background, #333);
+    color: var(--button-text, #FFF);
+}
