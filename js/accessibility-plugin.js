@@ -466,7 +466,7 @@
         }
         
 
-    }
+    };
 
 
 
@@ -561,9 +561,9 @@
         }
 
 
-    }) // end of event listeners/toggle section
+    }); // end of event listeners/toggle section
 
 
 
-}) // end of function
+})(); // end of function
 

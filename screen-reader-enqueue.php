@@ -40,7 +40,7 @@ function enqueue_scripts(){
                 true
         );
 }
-add_action('wp_enqueue_script', 'enqueue_scripts');
+add_action('wp_enqueue_scripts', 'enqueue_scripts');
 // load our toolbar 
 function display_toolbar(){
         include plugin_dir_path(__FILE__) .'templates/toolbar.php';
