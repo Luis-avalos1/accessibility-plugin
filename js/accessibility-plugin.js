@@ -291,14 +291,15 @@
         voiceInputCommand: function(event) {
 
             // TODO: finish this --> null is a place holder
-            const inputTranscript = null ;
+            const voiceInputResults = event.results;
+            const transcript = results[results.length -1][0].transcript.trim().toLowerCase();
 
             // TODO: this is bare bones, maybe there is better way?
             if(inputTranscript.includes('scroll down')) {
                 window.scrollBy(0,100);
             }else if (inputTranscript.includes('scroll up')){
                 window.scrollBy(0, -100)
-            }
+            }// }else if()
             // TODO: finsh ---> handle feature toggline 
             
 

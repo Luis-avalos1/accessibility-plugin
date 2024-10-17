@@ -5,6 +5,14 @@
         <span class="accessibility-button-label">Screen Reader</span>
     </button>
 
+    <button id="voice-input-toggle" class='accessibility-button' aria-pressed="false">
+        <span class="accessibility-button-label">Voice Input</span>
+    </button>
+
+    <button id="keyboard-navigation-toggle" class='accessibility-button' aria-pressed="false">
+        <span class="accessibility-button-label">keyboard Navigation</span>
+    </button>
+
     <button id="increase-text-size" class="accessibility-button" aria-label="Increase Text Size">
         <span class="accessibility-button-label">Increase Text Size</span>
     </button>
