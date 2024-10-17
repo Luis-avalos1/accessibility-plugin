@@ -10,6 +10,7 @@
     // TODO (8): FEATURES : adjusting text size , line spacing, dyslexia friendly font
     // TODO (9): --> animation for pausing  POTENTIAL FEATURE: 
     // TODO (18): Finish Color Mode Feature 
+    // TODO (19): make screen reader, read faster ---> customizable speed. 
 
     // TODO event listeners [FEATURES]
         // TODO (10): toggling screen reader 
@@ -426,7 +427,7 @@
             }
         }
 
-    };
+    }; // end of adjust spacing obj 
 
     // color mode feature --> protanopia, deuteranopia, tritanopia, high-contrast
 
