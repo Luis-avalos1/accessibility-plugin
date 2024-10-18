@@ -10,7 +10,7 @@
     </button>
 
     <button id="keyboard-navigation-toggle" class='accessibility-button' aria-pressed="false">
-        <span class="accessibility-button-label">keyboard Navigation</span>
+        <span class="accessibility-button-label">keyboard navigation</span>
     </button>
 
     <button id="increase-text-size" class="accessibility-button" aria-label="Increase Text Size">
@@ -30,7 +30,7 @@
     </button>
 
     <button id="dyslexia-font-toggle" class="accessibility-button" aria-pressed="false">
-        <span class="accessibility-button-label">Dyslexia Font</span>
+        <span class="dyslexia-font-toggle">Dyslexia Font</span>
     </button>
 
     <!-- Wrap the select element in a div with class 'select-wrapping' and include a label -->

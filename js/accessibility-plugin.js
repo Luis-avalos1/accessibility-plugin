@@ -486,7 +486,7 @@
 
 
         // toggle 
-        // TODO: input correct id
+        // TODO: input correct id 
         const keyboardNavigationToggle = document.getElementById("");
         if(keyboardNavigationToggle) {
             keyboardNavigationToggle.addEventListener('click', function(){
@@ -512,6 +512,7 @@
         }
 
         // color mode toggle 
+        // TODO: potentital issue, --> wrong id 
         const colorModeToggle = document.getElementById('awe-color-mode-select');
         if(colorModeToggle) {
             colorMode.addEventListener('change', function(){
