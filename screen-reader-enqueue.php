@@ -1,5 +1,3 @@
-
-
 <?php
 /*
 Plugin Name: Accessibility Plugin

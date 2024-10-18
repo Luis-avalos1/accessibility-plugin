@@ -153,7 +153,7 @@
         // initializer funciton 
         init: function(){
             // Set up an event listener for keydown events
-            document.addEventListener('keydown', this.handleKeyDown.bind(this))
+            document.addEventListener('keydown', this.handleKeyDown.bind(this));
         },
 
         // Keydown event handler
@@ -201,7 +201,7 @@
         getFocusableElements: function() {
             return Array.from(document.querySelectorAll(
                 'a, button, input, [tabindex]:not([tabindex="-1"])'
-            )).filter(el => !el.hasAttribute('disabled')) // Filter out disabled elements
+            )).filter(el => !el.hasAttribute('disabled')); // Filter out disabled elements
         },
 
         // Navigate between sections using Arrow Keys
@@ -299,7 +299,7 @@
             if(inputTranscript.includes('scroll down')) {
                 window.scrollBy(0,100);
             }else if (inputTranscript.includes('scroll up')){
-                window.scrollBy(0, -100)
+                window.scrollBy(0, -100);
             }// }else if()
             // TODO: finsh ---> handle feature toggline 
             
@@ -410,11 +410,11 @@
             EnableOpenDyslexiaFont = !EnableOpenDyslexiaFont;
 
             if(EnableOpenDyslexiaFont){
-                document.body.classList.add('accesibility-dyslexia-fonts');
-                localStorage.setItem("Open-Dyslexia-Font", 'true');
+                document.body.classList.add('dyslexia-font-toggle');
+                localStorage.setItem('Open-Dyslexia-Font', 'true');
             }else {
-                document.body.classList.remove('accesibility-dyslexia-fonts');
-                localStorage.setItem("Open-Dyslexia-Font", 'false');
+                document.body.classList.remove('dyslexia-font-toggle');
+                localStorage.setItem('Open-Dyslexia-Font', 'false');
             }
         }, 
 
@@ -423,7 +423,7 @@
             const savedFont = localStorage.getItem('Open-Dyslexia-Font') === 'true';
             if(savedFont){
                 EnableOpenDyslexiaFont = true;
-                document.body.classList.add('accesibility-dyslexia-fonts');
+                document.body.classList.add('dyslexia-font-toggle');
             }
         }
 
@@ -482,12 +482,13 @@
         OpenDyslexiaFont.loadDyslexiaFont();
         colorMode.loadColorMode();
 
+
         // toggling below
 
 
         // toggle 
         // TODO: input correct id 
-        const keyboardNavigationToggle = document.getElementById("");
+        const keyboardNavigationToggle = document.getElementById("keyboard-navigation-toggle");
         if(keyboardNavigationToggle) {
             keyboardNavigationToggle.addEventListener('click', function(){
                 EnableKeyboardNav = !EnableKeyboardNav;
@@ -513,7 +514,7 @@
 
         // color mode toggle 
         // TODO: potentital issue, --> wrong id 
-        const colorModeToggle = document.getElementById('awe-color-mode-select');
+        const colorModeToggle = document.getElementById('color-mode-select');
         if(colorModeToggle) {
             colorMode.addEventListener('change', function(){
                 colorMode.setColorMode(this.value);
@@ -555,8 +556,8 @@
         if(dyslexiaFontToggle){
             dyslexiaFontToggle.addEventListener('click', function(){
                 OpenDyslexiaFont.toggle();
-                dyslexiaFontToggle.textContent = enableOpenDyslexiaFont ? 'Dyslexia Font (On)' : 'Dyslexia Font';
-                dyslexiaFontToggle.setAttribute('aria-pressed', enableOpenDyslexiaFont.toString());
+                dyslexiaFontToggle.textContent = EnableOpenDyslexiaFont ? 'Dyslexia Font (On)' : 'Dyslexia Font';
+                dyslexiaFontToggle.setAttribute('aria-pressed', EnableOpenDyslexiaFont.toString());
             });
             // init button text 
             this.textContent = EnableOpenDyslexiaFont ? 'Dyslexia Font (On)' : 'Dyslexia Font';
