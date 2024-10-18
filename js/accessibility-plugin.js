@@ -109,7 +109,7 @@
             document.querySelector('[role= "main"]') ||
             document.querySelector('.main-content')||
             document.getElementById('main-content')||
-            document.querySelector('#content')
+            document.querySelector('#content');
             document.querySelector('.content');
 
 
