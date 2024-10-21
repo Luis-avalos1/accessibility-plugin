@@ -23,12 +23,13 @@ if(!defined('ABSPATH')){
 // css and js file --> enqueue
 function enqueue_scripts(){
 
-        wp_enqueue_style(
-                'plugin-css',
-                plugin_dir_url( __FILE__ ) . 'css/styles.css',
-                array(),
-                '1.0'
-        );
+        
+        // wp_enqueue_style(
+        //         'plugin-css',
+        //         plugin_dir_url( __FILE__ ) . 'css/styles.css',
+        //         array(),
+        //         '1.0'
+        // );
 
         wp_enqueue_script(
                 'plugin-js', 

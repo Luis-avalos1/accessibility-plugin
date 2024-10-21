@@ -4,7 +4,7 @@
 /* THese are hosted in the fonts dir */
 
 
-
+/* TODO: Figure out why these do not load. */
 /* instantiating OpenDyslexic fonts  */
 @font-face { /* REGULAR FONT */
     font-family: 'OpenDyslexic';
@@ -161,6 +161,8 @@ body.color-mode-default{
 }
 
 /* TODO: lets see how this looks in testing --> if it can look better we will use */
+
+/* TODO: instead of attempting to maniuplate using values, we can use SVG filters */
 /* Protanopia Simulation */
 body.protanopia {
     filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(300%);

@@ -8,7 +8,7 @@
     // TODO (6): FEATURE: toolbar to navigate features --> could be done in PHP with CSS styling, this may be the easiest way. 
     // TODO (7): FEATURE: color mode funct for color blindness
     // TODO (8): FEATURES : adjusting text size , line spacing, dyslexia friendly font
-    // TODO (9): --> animation for pausing  POTENTIAL FEATURE: 
+    // TODO (9): --> animation for pausing  POTENTIAL FEATURE!
     // TODO (18): Finish Color Mode Feature 
     // TODO (19): make screen reader, read faster ---> customizable speed. 
 
@@ -81,6 +81,7 @@
 
         // speack text funct
         // (tts)text-to-speech function, converts text to speech via web speech api
+        // TODO: fix this function --> i dont think it should take in a parameter 
         tts: function(text){
 
             // we wont to only perform this if screen reader is enabled and our speech synth api is supported by current browser
@@ -516,12 +517,15 @@
         // TODO: potentital issue, --> wrong id 
         const colorModeToggle = document.getElementById('color-mode-select');
         if(colorModeToggle) {
-            colorMode.addEventListener('change', function(){
+            // TODO: comment below this
+            // trying the 'click' ---> instead of 'change ::: was previously change, so if it doesnt work change it back
+            colorMode.addEventListener('click', function(){
                 colorMode.setColorMode(this.value);
             });
         }
 
-        // font size toggles
+        // TODO: fix this, they are workign like tab buttons ---> OR this could be a website stlying/formatting issue, depending on how it was built.
+        // font size toggles 
         const increaseFontSizeButton = document.getElementById('increase-text-size');
         if(increaseFontSizeButton){
             increaseFontSizeButton.addEventListener('click', function() {
