@@ -329,7 +329,7 @@
             }
             // set font size 
             document.documentElement.style.fontSize = fontSize + '%';
-            localStorage.setItem("change-font-size", fontSize);
+            localStorage.setItem('increase-text-size', fontSize);
         },
 
         // decreas font size function 
@@ -337,14 +337,14 @@
             // limiting the amount we can decrease the font
             fontSize = Math.max(40, fontSize - 10);
             document.documentElement.style.fontSize = fontSize + '%';
-            localStorage.setItem("change-font-size", fontSize);
+            localStorage.setItem('decrease-text-size', fontSize);
 
         }, 
 
         // load font size 
         loadFontSize: function() {
             // we want a field that wil save the current font size that will get displayed
-            const savedFontSize = localStorage.getItem("change-font-size");
+            const savedFontSize = localStorage.getItem('adjust-text-size');
 
             if(savedFontSize){
                 fontSize = parseInt(savedFontSize, 10);
