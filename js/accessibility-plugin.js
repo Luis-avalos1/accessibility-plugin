@@ -282,7 +282,8 @@
             }
         }, 
 
-
+        
+        // TODO: Thoroughly test this!
         // TODO: Finish 
         // we want a fuction that will handle the results, and do some action --> based on our voice input
         voiceInputCommand: function(event) {
@@ -452,6 +453,7 @@
                 document.body.classList.add(`color-mode-${mode}`);
             }
             
+            // redundant 
             // // reset to default color mode mechanism 
             // if(mode == 'reset'){
             //     mode = 'default';
@@ -593,7 +595,6 @@
 
 
         // color mode toggle 
-        // TODO: potentital issue, --> wrong id 
         const colorModeToggle = document.getElementById('color-mode-select');
         if(colorModeToggle) {
             colorMode.addEventListener('change', function(){

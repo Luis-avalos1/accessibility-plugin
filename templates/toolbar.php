@@ -142,11 +142,11 @@
     /* TODO: Finish */
     /* Color mode  */
     body.color-mode-protanopia {
-        filter: url('#protanopia');
+        filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(300%);
     }
 
     body.color-mode-tritanopia {
-        filter: url('#tritanopia');
+        filter: grayscale(100%) sepia(100%) hue-rotate(50deg) saturate(300%);
     }
 
     body.color-mode-deuteranopia {
