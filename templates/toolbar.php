@@ -243,7 +243,6 @@
             <option value="deuteranopia">Deuteranopia</option>
             <option value="tritanopia">Tritanopia</option>
             <option value="high-contrast">High Contrast</option>
-            <option value="reset">Reset to Default</option>
         </select>
     </div>
 
