@@ -1,45 +1,47 @@
     
     // [LIST OF WHAT NEEDS TO BE DONE] ---> more below in code.
     // TODO (1): webspeech API broweser support --> there may be a few browsers that dont support this api, we may need to think of a work around this edge case.
-    // TODO (2): need a func that stops the read, we cant read all website at once
-    // TODO (3): implement keyboard navigation -> I'll take this on right now (Isaac Quintanilla)
-    // TODO (4): implement voice nav -> requires audio input, need a function to stopp gettng audio input
+    // // TODO (2): need a func that stops the read, we cant read all website at once
+    // // TODO (3): implement keyboard navigation -> I'll take this on right now (Isaac Quintanilla)
+    // // TODO (4): implement voice nav -> requires audio input, need a function to stopp gettng audio input
     // TODO (5): handling errors --> this needs to be more thought out.
-    // TODO (6): FEATURE: toolbar to navigate features --> could be done in PHP with CSS styling, this may be the easiest way. 
-    // TODO (7): FEATURE: color mode funct for color blindness
-    // TODO (8): FEATURES : adjusting text size , line spacing, dyslexia friendly font
-    // TODO (9): --> animation for pausing  POTENTIAL FEATURE!
-    // TODO (18): Finish Color Mode Feature 
-    // TODO (19): make screen reader, read faster ---> customizable speed. 
+    // // TODO (6): FEATURE: toolbar to navigate features --> could be done in PHP with CSS styling, this may be the easiest way. 
+    // // TODO (7): FEATURE: color mode funct for color blindness
+    // // TODO (8): FEATURES : adjusting text size , line spacing, dyslexia friendly font
+    // TODO (9): --> animation for pausing  POTENTIAL FEATURE! --> prolly wont happen 
+    // // TODO (18): Finish Color Mode Feature 
+    // TODO (19): make screen reader, read faster ---> customizable speed. || Blind individuals tend to process audio info faster according to thursday business guest speaker
 
-    // TODO event listeners [FEATURES]
-        // TODO (10): toggling screen reader 
-        // TODO (11): toggle key board nav 
-        // TODO (12): toggel voice nav
-        // TODO (13): toggel color mode 
-        // TODO (14): font size
-        // TODO (15): line spacing
-        // TODO (16): dyslexia font 
+    // UPDATED TODO --> everything that has not been crossed out we still need to do, below are the new todos
+    // TODO: fix keyboard nav, doesnt work properly. 
+    // TODO: Screen reader continues to read previous page if you click on another site page
+    // TODO: Font size not working properly, works more like a tab
+    // TODO: Only deutranopia & default color modes work, BUT when you change to deutranopia, the tool bar stays at the bottom of the page
+    // TODO: figure out why sometimes the toolbar just dissapears 
+    // TODO: Dyslexia Font Does not work / replace the font on the page 
+    // TODO: Settings dont change when you move to a diff page 
+    // TODO: Test Voice nav, has not been tested at all
+        // TODO: add more commands for voice nav
+    // TODO: we can probably delete our css file entirely, since its been streamlined to toolbar.php
+    // // TODO event listeners [FEATURES]
+       //  // TODO (10): toggling screen reader 
+        // // TODO (11): toggle key board nav 
+        // // TODO (12): toggel voice nav
+        // // TODO (13): toggel color mode 
+        // // TODO (14): font size
+        // // TODO (15): line spacing
+        // // TODO (16): dyslexia font 
         // TODO (17): animatations
-
     // TODO Im sure there is more func and stuff I havent thought of --> add what you think what else needs to be done 
-    
-
-    
-    // TODO IMPORTANT
     // TODO TEST EVERYTHING
-        // TODO Current Issue, i theorize that the css and js files are not being correctly loaded, cannot find them 
-                // TODO when i inspect element in test site --> I believe they should still appear
-                    // TODO  Additionally, the toolbar has no styling nor functionality. 
+        // // TODO Current Issue, i theorize that the css and js files are not being correctly loaded, cannot find them 
+                // // TODO when i inspect element in test site --> I believe they should still appear
+                    // // TODO  Additionally, the toolbar has no styling nor functionality. 
     
-
-
-
-
     // other docs -- more detail located within their respected files!
-    // TODO : CSS stlyes page 
-    // TODO php enque script 
-    // TODO php template for toolbar --> located in templates directory 
+    // // TODO : CSS stlyes page 
+    // // TODO php enque script 
+    // // TODO php template for toolbar --> located in templates directory 
 
     
 
@@ -66,7 +68,9 @@
     
     // PRECHECK: check if browswer support WebSpeech APIs
     const speechSynthSupport = 'speechSynthesis' in window;
-    const speechRecognitionSuppot = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const speechRecognitionSupported = !!SpeechRecognition;
+    
     
 
     // if supported we can continue 
@@ -81,7 +85,6 @@
 
         // speack text funct
         // (tts)text-to-speech function, converts text to speech via web speech api
-        // TODO: fix this function --> i dont think it should take in a parameter 
         tts: function(text){
 
             // we wont to only perform this if screen reader is enabled and our speech synth api is supported by current browser
@@ -105,39 +108,31 @@
         // it should read the labels from our website
         readWebsite: function(){
             // depending on the website --> select the main content and selectors, assuming website is built using standard semantics/lables 
-            let websiteMainCont = 
-            document.querySelector('main')||
-            document.querySelector('[role= "main"]') ||
-            document.querySelector('.main-content')||
-            document.getElementById('main-content')||
-            document.querySelector('#content');
-            document.querySelector('.content');
-
+            let websiteMainCont = document.querySelector(
+                'main, [role="main], .main-content, #main-content, #content, .content');
+           
 
             // however, if website doesnt abide by standard labels --> we will use lasagna love specifc selectors,
-            // TODO: add more lables/selectors specific to the current lasagna love website! if needed, but probably
             if(!websiteMainCont){
-                websiteMainCont = 
-                document.querySelector('.elementor-section-wrap') ||
-                document.querySelector('.elementor-widget-container');
+                websiteMainCont = document.querySelector(
+                    ' .elementor-section-wrap, .elementor-widget-container');
             }
 
 
-            // TODO: If still not found --> BODY CONTENT
-            // if we still have content, we will try and get it from body
-            // BODY CONTENT
+            // if text still not found, we can try the body
+            if(!websiteMainCont){
+                websiteMainCont = document.body;
+            }
 
+            // so now that we have extracted the text ---> tts 
+            const textToBeRead = websiteMainCont.innerText || websiteMainCont.textContent;
 
-
-
-            // TODO: If still not found go to BODY TEXT
-
-            // CODE HERE, ---> NOT DONE
-            // TODO: finish this --> way more to be added 
+            // call our tts function 
+            this.tts(textToBeRead);
             
         },
 
-        // TODO: more functions go below here!
+        // method to stop screen reader
         stopReading: function() {
             if(this.synth.speaking) {
                 this.synth.cancel();
@@ -250,7 +245,7 @@
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
             // if not supported
-            if(!SpeechRecognition){
+            if(!speechRecognitionSupported){
                 console.warn ("Error: Voice recognition is not supported on your current browser.");
                 return;
             }
@@ -299,10 +294,22 @@
             // TODO: this is bare bones, maybe there is better way?
             if(inputTranscript.includes('scroll down')) {
                 window.scrollBy(0,100);
-            }else if (inputTranscript.includes('scroll up')){
+            }
+
+            else if (inputTranscript.includes('scroll up')){
                 window.scrollBy(0, -100);
-            }// }else if()
-            // TODO: finsh ---> handle feature toggline 
+            }
+
+            else if (inputTranscript.includes(('read website'))){
+                screenReader.readWebsite();
+            }
+
+            else if (inputTranscript.includes(('stop reading'))){
+                screenReader.stopReading();
+            }
+
+            // TODO: Add more commands, this needs thorough testing !
+            
             
 
 
@@ -354,7 +361,8 @@
         }
     }; // end of adjust text size 
 
-    // TODO: NEEDS TESTING 
+
+    // TODO: Seems to be working pretty good! --> however, we dont want to adjust the spacing on our toolbar
     const adjusSpacing = {
 
         // incrase line spacing funct 
@@ -402,7 +410,7 @@
 
     }; 
 
-    // TODO: NEEDS finishing --> loading font 
+    // // TODO: NEEDS finishing --> loading font
     // dyslexia font 
     const OpenDyslexiaFont = {
 
@@ -437,17 +445,17 @@
 
         // setting mode --> remove any current color mode  
         setColorMode: function(mode){
-            document.body.classList.remove('color-mode-tritanopia','color-mode-highconstrast', 'color-mode-protanopia', 'color-mode-deuteranopia' );
+            document.body.classList.remove('color-mode-tritanopia','color-mode-highcontrast', 'color-mode-protanopia', 'color-mode-deuteranopia' );
             
             // setting our desired color mode --> checks to see if we have requested something other than the default color mode curr set
             if(mode !== 'default'){
                 document.body.classList.add(`color-mode-${mode}`);
             }
             
-            // reset to default color mode mechanism 
-            if(mode == 'reset'){
-                mode = 'default';
-            }
+            // // reset to default color mode mechanism 
+            // if(mode == 'reset'){
+            //     mode = 'default';
+            // }
 
             localStorage.setItem('color-mode', mode);
 
@@ -484,11 +492,7 @@
         colorMode.loadColorMode();
 
 
-        // toggling below
-
-
-        // toggle 
-        // TODO: input correct id 
+        // keyboard toggle 
         const keyboardNavigationToggle = document.getElementById("keyboard-navigation-toggle");
         if(keyboardNavigationToggle) {
             keyboardNavigationToggle.addEventListener('click', function(){
@@ -497,29 +501,102 @@
                     keyboardNavigation.init();
                     this.textContent = 'Keyboard Navigation ON';
                     this.setAttribute('aria-pressed', 'true');
-                    // TODO: Fill in correct id
-                    localStorage.setItem('', 'true');
+                    // // TODO: Fill in correct id
+                    localStorage.setItem('keyboard-navigation', 'true');
                 }else{
                     this.textContent = 'Keyboard Navigation OFF';
                     this.setAttribute('aria-pressed', 'true');
-                    // TODO: Fill in correct id
-                    localStorage.setItem('', 'false');
+                    // // TODO: Fill in correct id
+                    localStorage.setItem('keyboard-navigation', 'false');
                 }
             });
 
             // init button text 
+            const savedKeyboardMode = localStorage.getItem('keyboard-navigation') === true;
+            EnableKeyboardNav = savedKeyboardMode;
             keyboardNavigationToggle.textContent = EnableKeyboardNav ? 'Keyboard Navigation ON' : 'Keyboard Navigation OFF';
             keyboardNavigationToggle.setAttribute = ('aria-pressed', EnableKeyboardNav.toString());
 
         }
 
+
+        // Screen reader toggle 
+        const screenReaderToggle = document.getElementById("screen-reader-toggle");
+        if(screenReaderToggle){
+            // click i t
+            screenReaderToggle.addEventListener('click', function(){
+                //Enable the screen reader!
+                EnableScreenReader = !EnableScreenReader;
+                if(EnableScreenReader){
+                    screenReader.readWebsite();
+                    this.textContent = 'Screen Reader On';
+                    this.setAttribute('aria-pressed', 'true');
+                    localStorage.setItem('screen-reader', 'true');
+                } else {
+                    screenReader.stopReading();
+                    this.textContent = 'Screen Reader Off';
+                    this.setAttribute('aria-pressed', 'false');
+                    localStorage.setItem('screen-reader', 'false');
+                }
+            });
+
+            // init button save state
+            const screenReaderState = localStorage.getItem('screen-reader') === 'true';
+            EnableScreenReader = screenReaderState;
+
+            if(EnableScreenReader){
+                screenReader.readWebsite();
+            }
+
+
+            screenReaderToggle.textContent = EnableScreenReader ? 'Screen Reader On' : 'Screen Reader Off';
+            screenReaderToggle.setAttribute('aria-pressed', EnableScreenReader.toString());
+
+        }
+
+        // voice input toggle 
+        const voiceInputToggle = document.getElementById('voice-navigation-toggle');
+        if(voiceInputToggle){
+
+            voiceInputToggle.addEventListener('click', function(){
+                EnableVoiceInput = !EnableVoiceInput;
+                if(EnableVoiceInput){
+                    voiceInput.init();
+                    voiceInput.start();
+                    this.textContent = 'Voice Navigation On';
+
+                    this.setAttribute('aria-pressed', 'true');
+                    localStorage.setItem('voice-navigation', 'true');
+                }
+                else {
+
+                    voiceInput.stop();
+                    this.textContent = 'Voice Navigation Off';
+                    localStorage.setItem('aria-pressed', 'false');
+                }
+            });
+
+            // init 
+            const voiceInputState = localStorage.getItem('voice-navigation') === 'true';
+
+            EnableVoiceInput = voiceInputState;
+            if(EnableVoiceInput){
+                voiceInput.init();
+                voiceInput.start();
+            }
+
+            voiceInputToggle.textContent = EnableVoiceInput ? 'Voice Navigation On' : 'Voice Navigation Off';
+            voiceInputToggle.setAttribute('aria-pressed', EnableVoiceInput.toString());
+
+
+        }
+
+
         // color mode toggle 
         // TODO: potentital issue, --> wrong id 
         const colorModeToggle = document.getElementById('color-mode-select');
         if(colorModeToggle) {
-            // TODO: comment below this
-            // trying the 'click' ---> instead of 'change ::: was previously change, so if it doesnt work change it back
-            colorMode.addEventListener('click', function(){
+            colorMode.addEventListener('change', function(){
                 colorMode.setColorMode(this.value);
             });
         }
@@ -563,7 +640,16 @@
                 dyslexiaFontToggle.textContent = EnableOpenDyslexiaFont ? 'Dyslexia Font (On)' : 'Dyslexia Font';
                 dyslexiaFontToggle.setAttribute('aria-pressed', EnableOpenDyslexiaFont.toString());
             });
-            // init button text 
+
+
+            // init button text
+            const savedDysFontState = localStorage.getItem('Open-Dyslexia-font') === 'true';
+            EnableOpenDyslexiaFont = savedDysFontState;
+
+            if(EnableOpenDyslexiaFont){
+                document.body.classList.add('Open-Dyslexia-font');
+            }
+            
             this.textContent = EnableOpenDyslexiaFont ? 'Dyslexia Font (On)' : 'Dyslexia Font';
             dyslexiaFontToggle.setAttribute('aria-pressed', EnableOpenDyslexiaFont.toString());
         }
