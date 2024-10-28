@@ -23,6 +23,7 @@
     // TODO: Test Voice nav, has not been tested at all
         // TODO: add more commands for voice nav
     // TODO: we can probably delete our css file entirely, since its been streamlined to toolbar.php
+
     // // TODO event listeners [FEATURES]
        //  // TODO (10): toggling screen reader 
         // // TODO (11): toggle key board nav 
@@ -32,6 +33,8 @@
         // // TODO (15): line spacing
         // // TODO (16): dyslexia font 
         // TODO (17): animatations
+
+
     // TODO Im sure there is more func and stuff I havent thought of --> add what you think what else needs to be done 
     // TODO TEST EVERYTHING
         // // TODO Current Issue, i theorize that the css and js files are not being correctly loaded, cannot find them 
@@ -71,6 +74,29 @@
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const speechRecognitionSupported = !!SpeechRecognition;
     
+    // to start out the toolbar should not be enabled , --> we want an enabling feature
+    const accessibilityToggle = document.getElementById('accessibility-toggle');
+    const accessibilityToolbar = document.getElementById('accessibility-toolbar');
+
+
+    // loading our toolbar in when enabled 
+    if(accessibilityToolbar){
+        accessibilityToolbar.hidden = true;
+    }
+
+    if(accessibilityToggle){
+        accessibilityToggle.addEventListener('click', function(){
+            const isToggled = this.getAttribute('aria-pressed') === 'true';
+            this.setAttribute('aria-pressed', (!isToggled).toString());
+            // save current state 
+            localStorage.setItem('accessibility-toolbar', (!isToggled).toString());
+        });
+
+        // load this state in 
+        const currentState = localStorage.getItem('accessibility-toolbar') === 'true';
+        accessibilityToolbar.hidden = !currentState;
+        accessibilityToggle.setAttribute('aria-pressed', currentState.toString());
+    }
     
 
     // if supported we can continue 
@@ -282,8 +308,7 @@
             }
         }, 
 
-        
-        // TODO: Thoroughly test this!
+
         // TODO: Finish 
         // we want a fuction that will handle the results, and do some action --> based on our voice input
         voiceInputCommand: function(event) {
@@ -453,7 +478,6 @@
                 document.body.classList.add(`color-mode-${mode}`);
             }
             
-            // redundant 
             // // reset to default color mode mechanism 
             // if(mode == 'reset'){
             //     mode = 'default';
@@ -595,6 +619,7 @@
 
 
         // color mode toggle 
+        // TODO: potentital issue, --> wrong id 
         const colorModeToggle = document.getElementById('color-mode-select');
         if(colorModeToggle) {
             colorMode.addEventListener('change', function(){
