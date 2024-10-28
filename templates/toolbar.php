@@ -109,6 +109,25 @@
         box-shadow: 0 0 0 3px rgba(0, 123,255, 0.5);
     }
 
+    #accessibility-toggle{
+        position: fixed;
+        top: 50%;
+        left: 0;
+        transform: translate(-100%, -50%);
+        z-index: 1000;
+    }
+
+    #accessibility-toolbar{
+        position: fixed;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        z-index: 1000;    
+    }
+    #accessibility-toolbar[hidden]{
+        display: none;
+    }
+
     /* select wrapping */
     .select-wrapping {
         margin: 10px 0;
