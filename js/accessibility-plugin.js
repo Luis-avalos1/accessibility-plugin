@@ -74,31 +74,6 @@
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const speechRecognitionSupported = !!SpeechRecognition;
     
-    // to start out the toolbar should not be enabled , --> we want an enabling feature
-    const accessibilityToggle = document.getElementById('accessibility-toggle');
-    const accessibilityToolbar = document.getElementById('accessibility-toolbar');
-
-
-    // loading our toolbar in when enabled 
-    if(accessibilityToolbar){
-        accessibilityToolbar.hidden = true;
-    }
-
-    if(accessibilityToggle){
-        accessibilityToggle.addEventListener('click', function(){
-            const isToggled = this.getAttribute('aria-pressed') === 'true';
-            this.setAttribute('aria-pressed', (!isToggled).toString());
-            // save current state 
-            localStorage.setItem('accessibility-toolbar', (!isToggled).toString());
-        });
-
-        // load this state in 
-        const currentState = localStorage.getItem('accessibility-toolbar') === 'true';
-        accessibilityToolbar.hidden = !currentState;
-        accessibilityToggle.setAttribute('aria-pressed', currentState.toString());
-    }
-    
-
     // if supported we can continue 
     // Screen Reader Logic Start 
     const screenReader = {
@@ -517,6 +492,26 @@
         OpenDyslexiaFont.loadDyslexiaFont();
         colorMode.loadColorMode();
 
+
+        // toggle toolbar 
+        const accessbilityToggle = document.getElementById('accessibility-toggle');
+        const accessbilityToolbar = document.getElementById('accessibility-toolbar');
+
+        const tbState = localStorage.getItem('accessibility-toolbar') === 'true';
+        if(accessbilityToolbar){
+            accessbilityToolbar.hidden = !tbState;
+        }
+        if(accessbilityToggle){
+            accessbilityToggle.setAttribute('aria-pressed', tbState.toString());
+
+            accessbilityToggle.addEventListener('click', function(){
+                const toggled = this.getAttribute('aria-pressed') === 'true';
+                const newTbState = !toggled;
+                this.setAttribute('aria-pressed', newTbState.toString());
+                accessbilityToolbar.hidden = !newTbState;
+                localStorage.setItem('accessibility-toolbar', newTbState.toString());
+            });
+        }
 
         // keyboard toggle 
         const keyboardNavigationToggle = document.getElementById("keyboard-navigation-toggle");
