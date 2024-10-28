@@ -198,9 +198,15 @@
 
 </style>    
 
+<!-- Accessibility Toggle Button -->
+<button id="accessibility-toggle" aria-label="Enable Accessibility Toolbar" aria-pressed="false">
+  <!-- Use an icon or text -->
+  <span>Accessibility</span>
+</button>
+
 
 <!-- this will be a toolbar for our plugin -->
-<div id="toolbar" role="navigation" aria-label="Accessibility Toolbar">
+<div id="accessibility-toolbar" hidden>
 
     <button id="screen-reader-toggle" class="accessibility-button" aria-pressed="false">
         <span class="accessibility-button-label">Screen Reader</span>
