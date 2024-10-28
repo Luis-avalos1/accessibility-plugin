@@ -66,7 +66,7 @@
         font-family: 'OpenDyslexic', Arial, Helvetica, sans-serif !important;
     }
 
-    /* TODO: Fix any color or sizes issues --> this wil prolly look bad not good at css / artsy */
+    /* TODO: Fix any color or sizes issues  this wil prolly look bad not good at css / artsy */
     /* TOOL BAR */
     #toolbar {
         position: fixed;
