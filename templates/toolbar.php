@@ -1,138 +1,138 @@
+<!-- Begin toolbar.php -->
 <style>
-
-     
-    /* we want to have it so users can use dyslexia fonts if needed.  */
-    /* TODO [FIXED]:  we can host the files locally, we no longer rely on external dependencies */
-    /* THese are hosted in the fonts dir */
-
-
-    /* TODO: Figure out why these do not load. */
-    /* instantiating OpenDyslexic fonts  */
-
-    @font-face { /* REGULAR FONT */
+    /* Font Face Declarations for OpenDyslexic Font */
+    @font-face {
         font-family: 'OpenDyslexic';
-        src: url("../fonts/OpenDyslexic-Regular.woff2") format('woff2'), 
-        url("../fonts/OpenDyslexic-Regular.woff") format('woff'),
-        url("../fonts/OpenDyslexic-Regular.otf") format('opentype'),
-        url("../fonts/OpenDyslexic-Regular.eot");
-
+        src: url("../fonts/OpenDyslexic-Regular.woff2") format('woff2'),
+             url("../fonts/OpenDyslexic-Regular.woff") format('woff'),
+             url("../fonts/OpenDyslexic-Regular.otf") format('opentype'),
+             url("../fonts/OpenDyslexic-Regular.eot");
         font-weight: normal;
         font-style: normal;
         font-display: swap;
-    
     }
 
-    @font-face { /* ITALICS FONT */
+    @font-face {
         font-family: 'OpenDyslexic';
-        src: url("../fonts/OpenDyslexic-Italic.woff2") format('woff2'), 
-        url("../fonts/OpenDyslexic-Italic.woff") format('woff'),
-        url("../fonts/OpenDyslexic-Italic.otf") format('opentype'),
-        url("../fonts/OpenDyslexic-Italic.eot");
-
+        src: url("../fonts/OpenDyslexic-It) format('woff2'),
+             url("../fonts/OpenDyslexic-It) format('woff'),
+             url("../fonts/OpenDyslexic-Italic.otf") format('opentype'),
+             url("../fonts/OpenDyslexic-Italic.eot");
         font-weight: normal;
         font-style: italic;
         font-display: swap;
-    
-    }   
+    }
 
-    @font-face { /* BOLD FONT */
+    @font-face {
         font-family: 'OpenDyslexic';
-        src: url("../fonts/OpenDyslexic-Bold.woff2") format('woff2'), 
-        url("../fonts/OpenDyslexic-Bold.woff") format('woff'),
-        url("../fonts/OpenDyslexic-Bold.otf") format('opentype'),
-        url("../fonts/OpenDyslexic-Bold.eot");
-
+        src: url("../fonts/OpenDyslexic-Bold.woff2") format('woff2'),
+             url("../fonts/OpenDyslexic-Bold.woff) format('woff'),
+             url("../fonts/OpenDyslexic-Bold.otf") format('opentype'),
+             url("../fonts/OpenDyslexic-Bold.eot");
         font-weight: bold;
         font-style: normal;
         font-display: swap;
-    
     }
 
-    @font-face { /* BOlD-ITALIC FONT */
+    @font-face {
         font-family: 'OpenDyslexic';
-        src: url("../fonts/OpenDyslexic-Bold-Italic.woff2") format('woff2'), 
-        url("../fonts/OpenDyslexic-Bold-Italic.woff") format('woff'),
-        url("../fonts/OpenDyslexic-Bold-Italic.otf") format('opentype'),
-        url("../fonts/OpenDyslexic-Bold-Italic.eot");
-
+        src: url("../fonts/OpenDyslexic-Bold-It)) format('woff),
+             url("../fonts/OpenDyslexic-Bold-It) format('woff'),
+             url("../fonts/OpenDyslexic-Bold-It) format('opentype'),
+             url("../fonts/OpenDyslexic-Bold.eot");
         font-weight: bold;
         font-style: italic;
         font-display: swap;
-    
     }
 
-    /* Dyslexic Font Fallback Mech. */
-    body.accesibility-dyslexia-fonts {
+    /* Apply OpenDyslexic Font */
+    body.dyslexia-font-toggle {
         font-family: 'OpenDyslexic', Arial, Helvetica, sans-serif !important;
     }
 
-    /* TODO: Fix any color or sizes issues  this wil prolly look bad not good at css / artsy */
-    /* TOOL BAR */
-    #toolbar {
+    /* Accessibility Toggle Button Styles */
+    #accessibility-toggle {
         position: fixed;
-        bottom: 25px;
-        right: 25px;
-        background-color: rgba(255, 255, 255, 0.98);
-        border-radius: 10px;
-        padding: 20px;
-        z-index: 10000;
-        box-shadow: 0 4px 15px rgba(0,0,0, 0.1);
-        font-family: Arial, Helvetica, sans-serif;
-        width: 280px;
-        transition: all 0.3s ease-in-out;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+        z-index: 1000;
+        background-color: white;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 50%;
+        outline: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    #toolbar:hover {
-        box-shadow: 0 4px 18px rgba(0,0,0, 0.15);
+    /* Accessibility Logo Styling */
+    #accessibility-toggle img {
+        width: 30px;
+        height: 30px;
     }
-    #toolbar:focus{
-        outline: 2px midnightblue;
-        box-shadow: 0 0 0 3px rgba(0, 123,255, 0.5);
+
+    /* Button State: When Pressed */
+    #accessibility-toggle[aria-pressed="true"] {
+        background-color: blue;
     }
-    /* TOOL BAR buttons */
-    .accessibility-button {
+
+    /* Toolbar Styles */
+    #accessibility-toolbar {
+        position: fixed;
+        top: 50%;
+        left: 70px; /* Adjust based on toggle button size and position */
+        transform: translateY(-50%);
+        z-index: 999;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        width: 250px;
+    }
+
+    /* Hide the toolbar when not visible */
+    #accessibility-toolbar[hidden] {
+        display: none;
+    }
+
+    /* Toolbar Button Styles */
+    #accessibility-toolbar button {
         background-color: lightblue;
         border: none;
-        border-radius: 8px;
-        margin: 6px 0 ;
+        border-radius: 5px;
+        margin: 6px 0;
         padding: 10px 15px;
         font-size: 15px;
         width: 100%;
         cursor: pointer;
         transition: background-color 0.3s ease;
     }
-    .accessibility-button:hover{
+
+    #accessibility {
         background-color: #0056b3;
     }
-    .accessibility-button:focus{
+
+    #accessibility-toolbar button:hover {
+        background-color: #007bff;
+    }
+
+    #accessibility-toolbar button:focus {
         outline: none;
-        box-shadow: 0 0 0 3px rgba(0, 123,255, 0.5);
+        box-shadow: 0 0 0 3px rgba(0,123,255,0.5);
     }
 
-    #accessibility-toggle{
-        position: fixed;
-        top: 50%;
-        left: 0;
-        transform: translate(-100%, -50%);
-        z-index: 1000;
-    }
-
-    #accessibility-toolbar{
-        position: fixed;
-        top: 50%;
-        left: 0;
-        transform: translateY(-50%);
-        z-index: 1000;    
-    }
-    #accessibility-toolbar[hidden]{
-        display: none;
-    }
-
-    /* select wrapping */
+    /* Select Wrapping */
     .select-wrapping {
         margin: 10px 0;
     }
-    .select-wrapping label{
+
+    .select-wr {
         display: block;
         font-size: 15px;
         margin-bottom: 5px;
@@ -143,123 +143,89 @@
         width: 100%;
         padding: 10px;
         border: 1px solid #CCCCCC;
-        border-radius: 8px;
+        border-radius: 5px;
         font-size: 15px;
         background-color: white;
         appearance: none;
-        background-image: url('data:image/svg+xml;charset=US-ASCII,<svg%20xmlns="http://www.w3.org/2000/svg"%20viewBox="0%200%204%205"><polygon%20points="2,0%204,5%200,5"%20style="fill:%23CCCCCC;"/></svg>');
-        background-repeat: no-repeat;
-        background-position: right 8px center;
-        background-size: 8px 10px;
-    }
-    .select:focus{
-        outline: none;
-        border-color: lightskyblue;
-        box-shadow: 0 0 0 3px rgba(0, 123,255, 0.25);
+        position: relative;
+        cursor: pointer;
     }
 
-    /* TODO: Finish */
-    /* Color mode  */
+    .select:focus {
+        outline: none;
+        border-color: lightskyblue;
+        box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+    }
+
+    /* Color Mode Styles */
     body.color-mode-protanopia {
         filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(300%);
+    }
+
+    body.color-mode-deuteranopia {
+        filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(200%);
     }
 
     body.color-mode-tritanopia {
         filter: grayscale(100%) sepia(100%) hue-rotate(50deg) saturate(300%);
     }
 
-    body.color-mode-deuteranopia {
-        filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(200%);
-    }
-    body.high-contrast {
-        --background-color: #000000;
-        --text-color: #FFFFFF;
-        --link-color: #00FFFF;
-        --button-background: #333333;
-        --button-text: #FFFFFF;
-    }
-
-    body.color-mode-default{
-        filter: none;
-    }
-
-    /* TODO: lets see how this looks in testing --> if it can look better we will use */
-
-    /* TODO: instead of attempting to maniuplate using values, we can use SVG filters */
-    /* Protanopia Simulation */
-    body.protanopia {
-        filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(300%);
-    }
-
-    /* Deuteranopia Simulation */
-    body.deuteranopia {
-        filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(200%);
-    }
-
-    /* Tritanopia Simulation */
-    body.tritanopia {
-        filter: grayscale(100%) sepia(100%) hue-rotate(50deg) saturate(300%);
-    }
-
     body.color-mode-high-contrast {
-        background-color: var(--background-color, #000);
-        color: var(--text-color, #FFF);
+        background-color: #000000 !important;
+        color: #FFFFFF !important;
     }
 
+    /* High Contrast Mode Specific Elements */
     body.color-mode-high-contrast a {
-        color: var(--link-color, #00FFFF);
+        color: #00FFFF !important;
     }
 
     body.color-mode-high-contrast button {
-        background-color: var(--button-background, #333);
-        color: var(--button-text, #FFF);
+        background-color: #333333 !important;
+        color: #FFFFFF !important;
     }
-
-</style>    
+</style>
 
 <!-- Accessibility Toggle Button -->
 <button id="accessibility-toggle" aria-label="Enable Accessibility Toolbar" aria-pressed="false">
-  <!-- Use an icon or text -->
-  <span>Accessibility</span>
+    <img src="path/to/accessibility-icon.svg" alt="Accessibility Icon" aria-hidden="true">
 </button>
 
-
-<!-- this will be a toolbar for our plugin -->
+<!-- Accessibility Toolbar -->
 <div id="accessibility-toolbar" hidden>
-
     <button id="screen-reader-toggle" class="accessibility-button" aria-pressed="false">
-        <span class="accessibility-button-label">Screen Reader</span>
+        Screen Reader
     </button>
 
-    <button id="voice-input-toggle" class='accessibility-button' aria-pressed="false">
-        <span class="accessibility-button-label">Voice Input</span>
+    <button id="voice-input-toggle" class="accessibility-button" aria-pressed="false">
+        Voice Input
     </button>
 
-    <button id="keyboard-navigation-toggle" class='accessibility-button' aria-pressed="false">
-        <span class="accessibility-button-label">keyboard navigation</span>
+    <button id="keyboard-navigation-toggle" class="accessibility-button" aria-pressed="false">
+        Keyboard Navigation
     </button>
 
     <button id="increase-text-size" class="accessibility-button" aria-label="Increase Text Size">
-        <span class="accessibility-button-label">Increase Text Size</span>
+        Increase Text Size
     </button>
 
-    <button id="decrease-text-size" class="accessibility-button" aria-label="Decrease Text Size">
-        <span class="accessibility-button-label">Decrease Text Size</span>
+    <button id="decrease-text-size" aria-label="Decrease Text Size">
+        Decrease Text Size
     </button>
 
     <button id="increase-spacing" class="accessibility-button" aria-label="Increase Spacing">
-        <span class="accessibility-button-label">Increase Spacing</span>
+        Increase Spacing
     </button>
 
     <button id="decrease-spacing" class="accessibility-button" aria-label="Decrease Spacing">
-        <span class="accessibility-button-label">Decrease Spacing</span>
+        Decrease Spacing
     </button>
 
-    <button id="OpenDyslexic" class="accessibility-button" aria-pressed="false">
-        <span class="dyslexia-font-toggle">Dyslexia Font</span>
+    <button id="dyslexia-font-toggle" class="accessibility-button" aria-pressed="false">
+        Dyslexia Font
     </button>
 
-    <!-- Wrap the select element in a div with class 'select-wrapping' and include a label -->
+    <!-- Select Wrapper for Color Mode -->
     <div class="select-wrapping">
         <label for="color-mode-select">Color Mode</label>
         <select id="color-mode-select" class="select" aria-label="Select Color Mode">
@@ -270,5 +236,8 @@
             <option value="high-contrast">High Contrast</option>
         </select>
     </div>
+</div>
 
-</div> <!-- end of master div -->
+<!-- Include JavaScript -->
+<script src="path/to/your/accessibility-plugin.js"></script>
+<!-- End toolbar.php -->
