@@ -85,7 +85,7 @@
         readWebsite: function(){
             // depending on the website --> select the main content and selectors, assuming website is built using standard semantics/lables 
             let websiteMainCont = document.querySelector(
-                'main, [role="main], .main-content, #main-content, #content, .content');
+                'main, [role="main"], .main-content, #main-content, #content, .content');
            
 
             // however, if website doesnt abide by standard labels --> we will use lasagna love specifc selectors,
@@ -124,12 +124,14 @@
 
         // initializer funciton 
         init: function(){
+            console.log("Keyboard navigation initialized"); // <-- Added for debugging
             // Set up an event listener for keydown events
             document.addEventListener('keydown', this.handleKeyDown.bind(this));
         },
 
         // Keydown event handler
         handleKeyDown: function(event) {
+            console.log("Key Pressed:", event.key); // using this for debugging ==== REMOVE ONCE DEBUGGING IS DONE ====
             // switch case for different key presses
             switch(event.key) {
                 case 'Tab':
@@ -163,7 +165,7 @@
 
             // Circular navigation
             if (nextIndex < 0) nextIndex = focusableElements.length - 1;
-            if (nextIndex > focusableElements.length) nextIndex = 0;
+            if (nextIndex >= focusableElements.length) nextIndex = 0;
 
             focusableElements[nextIndex].focus();
             event.preventDefault(); // Prevent the default tab behavior
@@ -179,7 +181,7 @@
         // Navigate between sections using Arrow Keys
         navigate: function(direction) {
             const focusableElements = this.getFocusableElements();
-            const currentIndex = focusableElements.indecOf(document.activeElement);
+            const currentIndex = focusableElements.indexOf(document.activeElement);
             let nextIndex;
 
             if (direction === 'previous') {
