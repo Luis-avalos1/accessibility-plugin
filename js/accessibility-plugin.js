@@ -1,49 +1,25 @@
     
     // [LIST OF WHAT NEEDS TO BE DONE] ---> more below in code.
     // TODO (1): webspeech API broweser support --> there may be a few browsers that dont support this api, we may need to think of a work around this edge case.
-    // // TODO (2): need a func that stops the read, we cant read all website at once
-    // // TODO (3): implement keyboard navigation -> I'll take this on right now (Isaac Quintanilla)
-    // // TODO (4): implement voice nav -> requires audio input, need a function to stopp gettng audio input
     // TODO (5): handling errors --> this needs to be more thought out.
-    // // TODO (6): FEATURE: toolbar to navigate features --> could be done in PHP with CSS styling, this may be the easiest way. 
-    // // TODO (7): FEATURE: color mode funct for color blindness
-    // // TODO (8): FEATURES : adjusting text size , line spacing, dyslexia friendly font
+    // TODO: Screen reader not working on mac     
     // TODO (9): --> animation for pausing  POTENTIAL FEATURE! --> prolly wont happen 
-    // // TODO (18): Finish Color Mode Feature 
     // TODO (19): make screen reader, read faster ---> customizable speed. || Blind individuals tend to process audio info faster according to thursday business guest speaker
 
     // UPDATED TODO --> everything that has not been crossed out we still need to do, below are the new todos
-    // TODO: fix keyboard nav, doesnt work properly. 
+    // TODO: fix keyboard nav, doesnt work properly. --> does not navigate website elements 
     // TODO: Screen reader continues to read previous page if you click on another site page
     // TODO: Font size not working properly, works more like a tab
     // TODO: Only deutranopia & default color modes work, BUT when you change to deutranopia, the tool bar stays at the bottom of the page
     // TODO: figure out why sometimes the toolbar just dissapears 
     // TODO: Dyslexia Font Does not work / replace the font on the page 
     // TODO: Settings dont change when you move to a diff page 
-    // TODO: Test Voice nav, has not been tested at all
+    // TODO: Test Voice nav, has not been tested at all --> FINISH VOICE NAV --> Not sure it works 
         // TODO: add more commands for voice nav
-    // TODO: we can probably delete our css file entirely, since its been streamlined to toolbar.php
-    // // TODO event listeners [FEATURES]
-       //  // TODO (10): toggling screen reader 
-        // // TODO (11): toggle key board nav 
-        // // TODO (12): toggel voice nav
-        // // TODO (13): toggel color mode 
-        // // TODO (14): font size
-        // // TODO (15): line spacing
-        // // TODO (16): dyslexia font 
-        // TODO (17): animatations
-    // TODO Im sure there is more func and stuff I havent thought of --> add what you think what else needs to be done 
+        // TODO Im sure there is more func and stuff I havent thought of --> add what you think what else needs to be done 
     // TODO TEST EVERYTHING
-        // // TODO Current Issue, i theorize that the css and js files are not being correctly loaded, cannot find them 
-                // // TODO when i inspect element in test site --> I believe they should still appear
-                    // // TODO  Additionally, the toolbar has no styling nor functionality. 
-    
-    // other docs -- more detail located within their respected files!
-    // // TODO : CSS stlyes page 
-    // // TODO php enque script 
-    // // TODO php template for toolbar --> located in templates directory 
-
-    
+    // TODO : screen reader (windows) continues to read sometimes even when you turn off the screen reader 
+    // TODO: High contrast color mode not sure it works as intended 
 
 
 // screen reader logic 
