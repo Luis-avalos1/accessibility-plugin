@@ -23,7 +23,6 @@
     // TODO: Test Voice nav, has not been tested at all
         // TODO: add more commands for voice nav
     // TODO: we can probably delete our css file entirely, since its been streamlined to toolbar.php
-
     // // TODO event listeners [FEATURES]
        //  // TODO (10): toggling screen reader 
         // // TODO (11): toggle key board nav 
@@ -33,8 +32,6 @@
         // // TODO (15): line spacing
         // // TODO (16): dyslexia font 
         // TODO (17): animatations
-
-
     // TODO Im sure there is more func and stuff I havent thought of --> add what you think what else needs to be done 
     // TODO TEST EVERYTHING
         // // TODO Current Issue, i theorize that the css and js files are not being correctly loaded, cannot find them 
@@ -74,6 +71,8 @@
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const speechRecognitionSupported = !!SpeechRecognition;
     
+    
+
     // if supported we can continue 
     // Screen Reader Logic Start 
     const screenReader = {
@@ -283,7 +282,8 @@
             }
         }, 
 
-
+        
+        // TODO: Thoroughly test this!
         // TODO: Finish 
         // we want a fuction that will handle the results, and do some action --> based on our voice input
         voiceInputCommand: function(event) {
@@ -453,6 +453,7 @@
                 document.body.classList.add(`color-mode-${mode}`);
             }
             
+            // redundant 
             // // reset to default color mode mechanism 
             // if(mode == 'reset'){
             //     mode = 'default';
@@ -492,26 +493,6 @@
         OpenDyslexiaFont.loadDyslexiaFont();
         colorMode.loadColorMode();
 
-
-        // toggle toolbar 
-        const accessbilityToggle = document.getElementById('accessibility-toggle');
-        const accessbilityToolbar = document.getElementById('accessibility-toolbar');
-
-        const tbState = localStorage.getItem('accessibility-toolbar') === 'true';
-        if(accessbilityToolbar){
-            accessbilityToolbar.hidden = !tbState;
-        }
-        if(accessbilityToggle){
-            accessbilityToggle.setAttribute('aria-pressed', tbState.toString());
-
-            accessbilityToggle.addEventListener('click', function(){
-                const toggled = this.getAttribute('aria-pressed') === 'true';
-                const newTbState = !toggled;
-                this.setAttribute('aria-pressed', newTbState.toString());
-                accessbilityToolbar.hidden = !newTbState;
-                localStorage.setItem('accessibility-toolbar', newTbState.toString());
-            });
-        }
 
         // keyboard toggle 
         const keyboardNavigationToggle = document.getElementById("keyboard-navigation-toggle");
@@ -614,7 +595,6 @@
 
 
         // color mode toggle 
-        // TODO: potentital issue, --> wrong id 
         const colorModeToggle = document.getElementById('color-mode-select');
         if(colorModeToggle) {
             colorMode.addEventListener('change', function(){
