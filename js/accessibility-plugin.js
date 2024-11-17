@@ -1,144 +1,148 @@
-    
-    // [LIST OF WHAT NEEDS TO BE DONE] ---> more below in code.
-    // TODO (1): webspeech API broweser support --> there may be a few browsers that dont support this api, we may need to think of a work around this edge case.
-    // TODO (5): handling errors --> this needs to be more thought out.
-    // TODO: Screen reader not working on mac     
-    // TODO (9): --> animation for pausing  POTENTIAL FEATURE! --> prolly wont happen 
-    // TODO (19): make screen reader, read faster ---> customizable speed. || Blind individuals tend to process audio info faster according to thursday business guest speaker
 
-    // UPDATED TODO --> everything that has not been crossed out we still need to do, below are the new todos
-    // TODO: fix keyboard nav, doesnt work properly. --> does not navigate website elements 
-    // TODO: Screen reader continues to read previous page if you click on another site page
-    // TODO: Font size not working properly, works more like a tab
-    // TODO: Only deutranopia & default color modes work, BUT when you change to deutranopia, the tool bar stays at the bottom of the page
-    // TODO: figure out why sometimes the toolbar just dissapears 
-    // TODO: Dyslexia Font Does not work / replace the font on the page 
-    // TODO: Settings dont change when you move to a diff page 
-    // TODO: Test Voice nav, has not been tested at all --> FINISH VOICE NAV --> Not sure it works 
-        // TODO: add more commands for voice nav
-        // TODO Im sure there is more func and stuff I havent thought of --> add what you think what else needs to be done 
-    // TODO TEST EVERYTHING
-    // TODO : screen reader (windows) continues to read sometimes even when you turn off the screen reader 
-    // TODO: High contrast color mode not sure it works as intended 
-
-
-// screen reader logic 
-// IIFE function, so we can reduce global scope pollution
-(function(){
+// We can use a IIFE funciton to reduce global scope population
+(function() {
 
     'use strict';
 
-    // current state variable --> is feature: enabled or disabled?
-    let EnableKeyboardNav =     false;
-    let EnableVoiceInput =      false;
-    let EnableScreenReader =    false;
-    let EnableOpenDyslexiaFont =false;
-    let EnableAnimatiosPause =  false; // potentially a feature, time permitting 
 
-    // AS OF NOW : this feature is a maybe, will be executed if time permits, but would be nice
-    // custom settings ---> init set to default, users if needed can change these
+    // state variables --> are our features enabled???????
+    let EnableKeyboardNavigation = false;
+    let EnableVoiceInput = false;
+    let EnableScreenReader = false;
+    let EnableOpenDyslexiaFont = false;
+
+    // initial settings --> these can be changed via methods below!
     let fontSize = 100;
-    let letterSpac = 0;
+    let letterSpac =0;
     let lineHeight = 1.5;
 
-    
-    // PRECHECK: check if browswer support WebSpeech APIs
+
+    // PRECHECK: we need to check if our browser supports the webSpeech APIs
     const speechSynthSupport = 'speechSynthesis' in window;
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const speechRecognitionSupported = !!SpeechRecognition;
-    
-    
+    const isSpeechRecognitionSupported = !!SpeechRecognition;
 
-    // if supported we can continue 
-    // Screen Reader Logic Start 
+
+
+
+    // screen reader logic 
     const screenReader = {
 
-        // [VARIABLES]
-        // Place holder for speech utterance obj from API, reference to speech synth engine from api
+        // place holderes foru speech utterance object from our API, reference to sppech synth engine from API
         synth: window.speechSynthesis,
-        utterance: null, 
+        utterance: null,
 
 
-        // speack text funct
-        // (tts)text-to-speech function, converts text to speech via web speech api
-        tts: function(text){
 
-            // we wont to only perform this if screen reader is enabled and our speech synth api is supported by current browser
-            if(EnableScreenReader && speechSynthSupport){
-                // use our utterance var 
+        // our speak text function 
+        // ttt == text to speech ,  converts text to speech via web speech api 
+        //  takes in a textm and using the utterance obj it will speak it. 
+        tts: function(text) {
+
+            // we want to only use this if the screen reader is enables and our sppech synth api is supported in our browser
+            if (EnableScreenReader && speechSynthSupport) {
+
+                // case where if it has been talking, to stop --> keyboard nav related
+                if (this.synth.speaking) {
+                    this.synth.cancel(); 
+                }
+
+                // using our utterance object we created about we can execute speech, and set the settings for the voice 
                 this.utterance = new SpeechSynthesisUtterance(text);
-                // settings for the utterance [subject to change]
-                this.utterance.rate =1;
+                this.utterance.rate = 1;
                 this.utterance.lang = document.documentElement.lang || 'en-US';
                 this.utterance.pitch = 1;
+                
 
-                // tts 
+                // SPEAKKKKKKKK!
                 this.synth.speak(this.utterance);
             }
         },
 
 
-
-        // Method to read the website,
-        // here is where the screen reader will get what to read
-        // it should read the labels from our website
-        readWebsite: function(){
-            // depending on the website --> select the main content and selectors, assuming website is built using standard semantics/lables 
-            let websiteMainCont = document.querySelector(
-                'main, [role="main], .main-content, #main-content, #content, .content');
-           
-
-            // however, if website doesnt abide by standard labels --> we will use lasagna love specifc selectors,
-            if(!websiteMainCont){
-                websiteMainCont = document.querySelector(
-                    ' .elementor-section-wrap, .elementor-widget-container');
-            }
-
-
-            // if text still not found, we can try the body
-            if(!websiteMainCont){
-                websiteMainCont = document.body;
-            }
-
-            // so now that we have extracted the text ---> tts 
-            const textToBeRead = websiteMainCont.innerText || websiteMainCont.textContent;
-
-            // call our tts function 
-            this.tts(textToBeRead);
-            
+        // method that extract the labeling on an element on our website, --> usually this is for buttons or redirect elements --> we can read them
+        readAnElement: function(element) {
+            // works by checking html semantics --> has fallback methods 
+            const textToRead = element.getAttribute('aria-label') || element.alt || element.title || element.textContent || element.innerText || '';
+            // read what we have extracted
+            this.tts(textToRead);
         },
 
-        // method to stop screen reader
+
+
+        // method that reads our website!
+        // this is where the screen readers gets it texts that it will read
+        readWebsite: function() {
+            // depending on our website, ==> select the main content and selectors and assumiing the website is built using standard website semanitcs / labeling
+            let websiteMainContent = document.querySelector(
+                'main, [role="main"], .main-content, #main-content, #content, .content'
+            );
+
+
+            // however, if website doesntin abide by standard labels, we will use lasagna love specific selectors, since this is for lasagna love
+            if (!websiteMainContent) {
+                websiteMainContent = document.body;
+            }
+
+            // extract and set the content that will be read 
+            const textToBeRead = websiteMainContent.innerText || websiteMainContent.textContent;
+            // call our speak funciton 
+            this.tts(textToBeRead);
+        },
+
+        // method that stops the screen reader from reading 
         stopReading: function() {
-            if(this.synth.speaking) {
+            if (this.synth.speaking) {
                 this.synth.cancel();
             }
-        } 
+        }
+    };
 
-    }; // end of screen reader obj
+    // method that ensures the screen reader will not continue reading if we navigate to another page on the site
+    window.addEventListener('beforeunload', function() {
+        screenReader.stopReading();
+    });
 
-    // TODO: Finish, currenty (10/8) bare object not much to it as of now --> FOR ALL THE OBJ BELOW
+
+
+    // keyboard nav logic
     const keyboardNavigation = {
-        // store currently focused element
         currentFocusedElement: null,
+        previousFocusedElement: null,
+        boundHandleKeyDown: null,
 
-        // initializer funciton 
-        init: function(){
-            // Set up an event listener for keydown events
-            document.addEventListener('keydown', this.handleKeyDown.bind(this));
+        init: function() {
+            this.boundHandleKeyDown = this.handleKeyDown.bind(this);
+            document.addEventListener('keydown', this.boundHandleKeyDown);
+            // Add initial focus to the first focusable element
+            const focusableElements = this.getFocusableElements();
+            if (focusableElements.length > 0) {
+                this.focusElement(focusableElements[0]);
+            }
         },
 
-        // Keydown event handler
+        destroy: function() {
+            document.removeEventListener('keydown', this.boundHandleKeyDown);
+            if (this.currentFocusedElement) {
+                this.currentFocusedElement.classList.remove('keyboard-focused');
+            }
+            this.currentFocusedElement = null;
+            this.previousFocusedElement = null;
+        },
+
         handleKeyDown: function(event) {
-            // switch case for different key presses
-            switch(event.key) {
-                case 'Tab':
-                    this.handleTab(event);
-                    break;
+            // Prevent default scrolling behavior for arrow keys
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+                event.preventDefault();
+            }
+
+            switch (event.key) {
                 case 'ArrowUp':
+                case 'ArrowLeft':
                     this.navigate('previous');
                     break;
                 case 'ArrowDown':
+                case 'ArrowRight':
                     this.navigate('next');
                     break;
                 case 'Enter':
@@ -149,37 +153,36 @@
                     break;
                 default:
                     break;
-
             }
         },
 
-        // Handle Tab key for focused element
-        handleTab: function(event) {
-            const focusableElements = this.getFocusableElements();
-            const currentIndex = focusableElements.indexOf(document.activeElement);
-
-            // Determine next focusable element based on whether Shift is pressed (for reverse Tab)
-            let nextIndex = event.shiftKey ? currentIndex - 1 : currentIndex + 1;
-
-            // Circular navigation
-            if (nextIndex < 0) nextIndex = focusableElements.length - 1;
-            if (nextIndex > focusableElements.length) nextIndex = 0;
-
-            focusableElements[nextIndex].focus();
-            event.preventDefault(); // Prevent the default tab behavior
-        },
-
-        // Get all focusable elements on the page
         getFocusableElements: function() {
             return Array.from(document.querySelectorAll(
-                'a, button, input, [tabindex]:not([tabindex="-1"])'
-            )).filter(el => !el.hasAttribute('disabled')); // Filter out disabled elements
+                'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable]'
+            )).filter(el => el.offsetParent !== null);
         },
 
-        // Navigate between sections using Arrow Keys
+        focusElement: function(element) {
+            if (this.currentFocusedElement) {
+                this.currentFocusedElement.classList.remove('keyboard-focused');
+            }
+            this.previousFocusedElement = this.currentFocusedElement;
+            this.currentFocusedElement = element;
+            this.currentFocusedElement.focus();
+            this.currentFocusedElement.classList.add('keyboard-focused');
+
+            // Scroll element into view
+            this.currentFocusedElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Screen reader reads the focused element
+            if (EnableScreenReader) {
+                screenReader.readAnElement(this.currentFocusedElement);
+            }
+        },
+
         navigate: function(direction) {
             const focusableElements = this.getFocusableElements();
-            const currentIndex = focusableElements.indecOf(document.activeElement);
+            const currentIndex = focusableElements.indexOf(this.currentFocusedElement);
             let nextIndex;
 
             if (direction === 'previous') {
@@ -188,46 +191,42 @@
                 nextIndex = currentIndex < focusableElements.length - 1 ? currentIndex + 1 : 0;
             }
 
-            focusableElements[nextIndex].focus();
+            this.focusElement(focusableElements[nextIndex]);
         },
 
-        // Activate currently focused element (for Enter Key)
         activateCurrentElement: function() {
-            if (document.activeElement && typeof document.activeElement.click === 'function') {
-                document.activeElement.click();
+            if (this.currentFocusedElement && typeof this.currentFocusedElement.click === 'function') {
+                this.currentFocusedElement.click();
             }
         },
 
-        // Close or cancel (for Escape Key)
         closeFocusedElement: function() {
-            const focusedElement = document.activeElement;
+            const focusedElement = this.currentFocusedElement;
 
-            // Example: if a model or pop-up is focused, you might want to close it
-            if(focusedElement && focusedElement.classList.contains('modal')) {
+            if (focusedElement && focusedElement.classList.contains('modal')) {
                 focusedElement.style.display = 'none';
             }
         },
-    }; // end of keyboad nav
+    };
+
+    // Voice Input Logic
+    const voiceCommandObject = {
+
+        // 
+        voiceRecognition: null,
+
+        isCurrentlyListening: false,
+
+        init: function() {
 
 
-
-    // TODO: POTENTIAL FEATURE, if not working well we will proceed without it.
-    const voiceInput = {
-
-        voiceRecognition: null, 
-        
-        // init funct 
-        init: function () {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-            // if not supported
-            if(!speechRecognitionSupported){
-                console.warn ("Error: Voice recognition is not supported on your current browser.");
+            if (!isSpeechRecognitionSupported) {
+                console.warn("Error: Voice recognition is not supported on your current browser.");
                 return;
             }
 
-            // IS SUPPORTED
-            // TODO: FINISH!! 
+
+            // voice settings 
             this.voiceRecognition = new SpeechRecognition();
             this.voiceRecognition.continuous = true;
             this.voiceRecognition.interimResults = false;
@@ -235,116 +234,148 @@
             this.voiceRecognition.onresult = this.voiceInputCommand.bind(this);
 
             this.voiceRecognition.onerror = function(event) {
+
                 console.error('Voice Recognition Error: ', event.error);
             };
-                
-        }, 
 
-        start: function(){
-            if(EnableVoiceInput && speechRecognitionSuppot && this.voiceRecognition){
+            
+            this.voiceRecognition.onstart = () => {
 
-                try{
-                    this.voiceRecognition.start();
-                }catch(error){
-                    console.error("Voice Recognition Start Error: ", error);
+                this.isListening = true;
+                this.updateVoiceInputIndicatorStatus(true);
+            };
+
+
+
+            this.voiceRecognition.onend = () => {
+
+                this.isListening = false;
+                this.updateVoiceInputIndicatorStatus(false);
+
+                // Automatically restart recognition if still enabled
+                if (EnableVoiceInput) {
+                    this.start();
                 }
-
-            }
-        }, 
-
-        stop: function () {
-            if(this.voiceRecognition){
-                this.voiceRecognition.stop();
-            }
-        }, 
-
-        
-        // TODO: Thoroughly test this!
-        // TODO: Finish 
-        // we want a fuction that will handle the results, and do some action --> based on our voice input
-        voiceInputCommand: function(event) {
-
-            // TODO: finish this --> null is a place holder
-            const voiceInputResults = event.results;
-            const transcript = results[results.length -1][0].transcript.trim().toLowerCase();
-
-            // TODO: this is bare bones, maybe there is better way?
-            if(inputTranscript.includes('scroll down')) {
-                window.scrollBy(0,100);
-            }
-
-            else if (inputTranscript.includes('scroll up')){
-                window.scrollBy(0, -100);
-            }
-
-            else if (inputTranscript.includes(('read website'))){
-                screenReader.readWebsite();
-            }
-
-            else if (inputTranscript.includes(('stop reading'))){
-                screenReader.stopReading();
-            }
-
-            // TODO: Add more commands, this needs thorough testing !
-            
-            
-
-
-
-
-
-        }
-
-
-
-
-
-    }; // end of voice input obk 
-
-
-    // TODO: NEEDS TESTING
-    const adjustTextSize = {
-
-        increase: function() {
-            fontSize+= 10;
-
-            // check if font, hasnt and will not exceed our limit font size 
-            if(fontSize > 200){
-                fontSize = 200;
-            }
-            // set font size 
-            document.documentElement.style.fontSize = fontSize + '%';
-            localStorage.setItem('increase-text-size', fontSize);
+            };
         },
 
-        // decreas font size function 
-        decrease: function() {
-            // limiting the amount we can decrease the font
-            fontSize = Math.max(40, fontSize - 10);
-            document.documentElement.style.fontSize = fontSize + '%';
-            localStorage.setItem('decrease-text-size', fontSize);
+        start: function() {
 
-        }, 
+            if (EnableVoiceInput && isSpeechRecognitionSupported && this.voiceRecognition && !this.isCurrentlyListening) {
+                try {
+                    this.voiceRecognition.start();
+                } catch (error) {
+                    console.error("Voice Recognition Start Error: ", error);
+                }
+            }
+        },
 
-        // load font size 
-        loadFontSize: function() {
-            // we want a field that wil save the current font size that will get displayed
-            const savedFontSize = localStorage.getItem('adjust-text-size');
+        stop: function() {
 
-            if(savedFontSize){
-                fontSize = parseInt(savedFontSize, 10);
-                document.documentElement.style.fontSize = fontSize + '%';
+            if (this.voiceRecognition && this.isCurrentlyListening) {
+                this.voiceRecognition.stop();
+            }
+        },
+
+        voiceInputCommand: function(event) {
+
+
+            const resultFromEvent = event.results;
+            const transcript = resultFromEvent[resultFromEvent.length - 1][0].transcript.trim().toLowerCase();
+
+            console.log('Voice Input:', transcript); // Feedback of recognized speech
+
+            if (transcript.includes('scroll down')) {
+                window.scrollBy(0, 150);
+            } else if (transcript.includes('scroll up')) {
+                window.scrollBy(0, -150);
+            } else if (transcript.includes('read website')) {
+                screenReader.readWebsite();
+            } else if (transcript.includes('stop reading')) {
+                screenReader.stopReading();
+            } else if (transcript.includes('increase font size')) {
+                adjustTextSize.increase();
+            } else if (transcript.includes('decrease font size')) {
+                adjustTextSize.decrease();
+            } else if (transcript.includes('increase spacing')) {
+                adjustSpacing.increase();
+            } else if (transcript.includes('decrease spacing')) {
+                adjustSpacing.decrease();
+            } else if (transcript.includes('toggle dyslexia font')) {
+                OpenDyslexiaFont.toggle();
+            } else if (transcript.includes('enable keyboard navigation')) {
+                if (!EnableKeyboardNavigation) {
+                    EnableKeyboardNavigation = true;
+                    keyboardNavigation.init();
+                    localStorage.setItem('keyboard-navigation', 'true');
+                }
+            } else if (transcript.includes('disable keyboard navigation')) {
+                if (EnableKeyboardNavigation) {
+                    EnableKeyboardNavigation = false;
+                    keyboardNavigation.destroy();
+                    localStorage.setItem('keyboard-navigation', 'false');
+                }
+            } else if (transcript.includes('activate element') || transcript.includes('enter element')) {
+                keyboardNavigation.activateCurrentElement();
+            } else if (transcript.includes('next element')) {
+                keyboardNavigation.navigate('next');
+            } else if (transcript.includes('previous element')) {
+                keyboardNavigation.navigate('previous');
+            } else if (transcript.includes('set color mode to')) {
+                const modes = ['default', 'protanopia', 'deuteranopia', 'tritanopia', 'high contrast'];
+                for (let mode of modes) {
+                    if (transcript.includes(mode)) {
+                        const className = mode.replace(' ', '-');
+                        colorMode.setColorMode(className);
+                        break;
+                    }
+                }
+            }
+        },
+
+        updateVoiceInputIndicatorStatus: function(isListening) {
+
+            
+            const voiceInputStatus = document.getElementById('voice-input-status');
+            if (voiceInputStatus) {
+                voiceInputStatus.textContent = isListening ? 'Listening...' : 'Voice Input OFF';
             }
         }
-    }; // end of adjust text size 
+    };
+
+    // Adjust foint size
+    const adjustTextSize = {
 
 
-    // TODO: Seems to be working pretty good! --> however, we dont want to adjust the spacing on our toolbar
-    const adjusSpacing = {
-
-        // incrase line spacing funct 
         increase: function() {
-            // increment with these value at each adjustment 
+
+            fontSize += 10;
+            if (fontSize > 150) fontSize = 150;
+            document.body.style.fontSize = fontSize + '%';
+            localStorage.setItem('adjust-text-size', fontSize);
+        },
+
+        decrease: function() {
+
+            fontSize -= 10;
+            if (fontSize < 80) fontSize = 80;
+            document.body.style.fontSize = fontSize + '%';
+            localStorage.setItem('adjust-text-size', fontSize);
+        },
+
+        loadFontSize: function() {
+            const savedFontSize = localStorage.getItem('adjust-text-size');
+            fontSize = savedFontSize ? parseInt(savedFontSize, 10) : 100;
+            document.body.style.fontSize = fontSize + '%';
+        }
+    };
+
+    // Adjust Spacing Logic
+    const adjustSpacing = {
+
+        increase: function() {
+
+
             letterSpac+=0.5;
             lineHeight += 0.1;
 
@@ -387,254 +418,222 @@
 
     }; 
 
-    // // TODO: NEEDS finishing --> loading font
-    // dyslexia font 
+    // Open Dyslexia Font Logic
     const OpenDyslexiaFont = {
 
+
         toggle: function() {
-            // enable O.D font --> inverse, since set to false;
             EnableOpenDyslexiaFont = !EnableOpenDyslexiaFont;
 
-            if(EnableOpenDyslexiaFont){
-                document.body.classList.add('dyslexia-font-toggle');
-                localStorage.setItem('Open-Dyslexia-Font', 'true');
-            }else {
-                document.body.classList.remove('dyslexia-font-toggle');
-                localStorage.setItem('Open-Dyslexia-Font', 'false');
-            }
-        }, 
+            if (EnableOpenDyslexiaFont) {
 
-        // load font 
+                document.body.classList.add('accessibility-dyslexia-fonts');
+                localStorage.setItem('Open-Dyslexia-Font', 'true');
+                console.log('OpenDyslexic font enabled.');
+            } else {
+
+                document.body.classList.remove('accessibility-dyslexia-fonts');
+                localStorage.setItem('Open-Dyslexia-Font', 'false');
+                console.log('OpenDyslexic font disabled.');
+            }
+        },
+
         loadDyslexiaFont: function() {
+
             const savedFont = localStorage.getItem('Open-Dyslexia-Font') === 'true';
-            if(savedFont){
-                EnableOpenDyslexiaFont = true;
-                document.body.classList.add('dyslexia-font-toggle');
+            EnableOpenDyslexiaFont = savedFont;
+
+            if (EnableOpenDyslexiaFont) {
+                document.body.classList.add('accessibility-dyslexia-fonts');
+                console.log('OpenDyslexic font loaded from localStorage.');
             }
         }
+    };
 
-    }; // end of adjust spacing obj 
-
-    // color mode feature --> protanopia, deuteranopia, tritanopia, high-contrast
-
-    // TODO: Finish
+    // Color Mode Logic
     const colorMode = {
 
-        // setting mode --> remove any current color mode  
-        setColorMode: function(mode){
-            document.body.classList.remove('color-mode-tritanopia','color-mode-highcontrast', 'color-mode-protanopia', 'color-mode-deuteranopia' );
-            
-            // setting our desired color mode --> checks to see if we have requested something other than the default color mode curr set
-            if(mode !== 'default'){
+
+        setColorMode: function(mode) {
+
+            document.body.classList.remove(
+                'color-mode-tritanopia',
+                'color-mode-high-contrast',
+                'color-mode-protanopia',
+                'color-mode-deuteranopia',
+                'color-mode-default'
+            );
+
+            if (mode !== 'default') {
                 document.body.classList.add(`color-mode-${mode}`);
             }
-            
-            // redundant 
-            // // reset to default color mode mechanism 
-            // if(mode == 'reset'){
-            //     mode = 'default';
-            // }
 
             localStorage.setItem('color-mode', mode);
-
         },
 
         loadColorMode: function() {
 
-            // save our current mode 
             const savedColorMode = localStorage.getItem('color-mode') || 'default';
-            // fetch and apply 
             this.setColorMode(savedColorMode);
 
             const selectColorMode = document.getElementById('color-mode-select');
-            if(selectColorMode){
+            if (selectColorMode) {
                 selectColorMode.value = savedColorMode;
             }
-
-
         }
-        
-
     };
 
+    // Event Listeners for Toggling Features
+    document.addEventListener('DOMContentLoaded', function() {
 
 
-    //  [  EVENT LISTENERS FOR TOGGLING ]
-
-    document.addEventListener('DOMContentLoaded', function (){
-
-        // cust setting
+        // load in current settings
         adjustTextSize.loadFontSize();
-        adjusSpacing.loadSpacing();
+        adjustSpacing.loadSpacing();
         OpenDyslexiaFont.loadDyslexiaFont();
         colorMode.loadColorMode();
 
-
-        // keyboard toggle 
-        const keyboardNavigationToggle = document.getElementById("keyboard-navigation-toggle");
-        if(keyboardNavigationToggle) {
-            keyboardNavigationToggle.addEventListener('click', function(){
-                EnableKeyboardNav = !EnableKeyboardNav;
-                if(EnableKeyboardNav){
+        // Keyboard Navigation Toggle
+        const keyboardNavigationToggler = document.getElementById('keyboard-navigation-toggle');
+        if (keyboardNavigationToggler) {
+            keyboardNavigationToggler.addEventListener('click', function() {
+                EnableKeyboardNavigation = !EnableKeyboardNavigation;
+                if (EnableKeyboardNavigation) {
                     keyboardNavigation.init();
                     this.textContent = 'Keyboard Navigation ON';
                     this.setAttribute('aria-pressed', 'true');
-                    // // TODO: Fill in correct id
                     localStorage.setItem('keyboard-navigation', 'true');
-                }else{
+                } else {
+                    keyboardNavigation.destroy();
                     this.textContent = 'Keyboard Navigation OFF';
-                    this.setAttribute('aria-pressed', 'true');
-                    // // TODO: Fill in correct id
+                    this.setAttribute('aria-pressed', 'false');
                     localStorage.setItem('keyboard-navigation', 'false');
                 }
             });
 
-            // init button text 
-            const savedKeyboardMode = localStorage.getItem('keyboard-navigation') === true;
-            EnableKeyboardNav = savedKeyboardMode;
-            keyboardNavigationToggle.textContent = EnableKeyboardNav ? 'Keyboard Navigation ON' : 'Keyboard Navigation OFF';
-            keyboardNavigationToggle.setAttribute = ('aria-pressed', EnableKeyboardNav.toString());
 
+            const savedKeyboardMode = localStorage.getItem('keyboard-navigation') === 'true';
+            EnableKeyboardNavigation = savedKeyboardMode;
+            if (EnableKeyboardNavigation) {
+                keyboardNavigation.init();
+            }
+
+            keyboardNavigationToggler.textContent = EnableKeyboardNavigation ? 'Keyboard Navigation ON' : 'Keyboard Navigation OFF';
+            keyboardNavigationToggler.setAttribute('aria-pressed', EnableKeyboardNavigation.toString());
         }
 
-
-        // Screen reader toggle 
-        const screenReaderToggle = document.getElementById("screen-reader-toggle");
-        if(screenReaderToggle){
-            // click i t
-            screenReaderToggle.addEventListener('click', function(){
-                //Enable the screen reader!
+        // Screen Reader Toggle
+        const screenReaderToggler = document.getElementById('screen-reader-toggle');
+        if (screenReaderToggler) {
+            screenReaderToggler.addEventListener('click', function() {
                 EnableScreenReader = !EnableScreenReader;
-                if(EnableScreenReader){
-                    screenReader.readWebsite();
-                    this.textContent = 'Screen Reader On';
+                if (EnableScreenReader) {
+                    this.textContent = 'Screen Reader ON';
                     this.setAttribute('aria-pressed', 'true');
                     localStorage.setItem('screen-reader', 'true');
+                    // Start reading if keyboard navigation is active
+                    if (EnableKeyboardNavigation && keyboardNavigation.currentFocusedElement) {
+                        screenReader.readAnElement(keyboardNavigation.currentFocusedElement);
+                    } else {
+                        screenReader.readWebsite();
+                    }
                 } else {
                     screenReader.stopReading();
-                    this.textContent = 'Screen Reader Off';
+                    this.textContent = 'Screen Reader OFF';
                     this.setAttribute('aria-pressed', 'false');
                     localStorage.setItem('screen-reader', 'false');
                 }
             });
 
-            // init button save state
             const screenReaderState = localStorage.getItem('screen-reader') === 'true';
             EnableScreenReader = screenReaderState;
 
-            if(EnableScreenReader){
-                screenReader.readWebsite();
-            }
-
-
-            screenReaderToggle.textContent = EnableScreenReader ? 'Screen Reader On' : 'Screen Reader Off';
-            screenReaderToggle.setAttribute('aria-pressed', EnableScreenReader.toString());
-
+            screenReaderToggler.textContent = EnableScreenReader ? 'Screen Reader ON' : 'Screen Reader OFF';
+            screenReaderToggler.setAttribute('aria-pressed', EnableScreenReader.toString());
         }
 
-        // voice input toggle 
-        const voiceInputToggle = document.getElementById('voice-navigation-toggle');
-        if(voiceInputToggle){
-
-            voiceInputToggle.addEventListener('click', function(){
+        // Voice Input Toggle
+        const voiceInputToggler = document.getElementById('voice-input-toggle');
+        if (voiceInputToggler) {
+            voiceInputToggler.addEventListener('click', function() {
                 EnableVoiceInput = !EnableVoiceInput;
-                if(EnableVoiceInput){
-                    voiceInput.init();
-                    voiceInput.start();
-                    this.textContent = 'Voice Navigation On';
-
+                if (EnableVoiceInput) {
+                    voiceCommandObject.init();
+                    voiceCommandObject.start();
+                    this.textContent = 'Voice Input ON';
                     this.setAttribute('aria-pressed', 'true');
-                    localStorage.setItem('voice-navigation', 'true');
-                }
-                else {
-
-                    voiceInput.stop();
-                    this.textContent = 'Voice Navigation Off';
-                    localStorage.setItem('aria-pressed', 'false');
+                    localStorage.setItem('voice-input', 'true');
+                } else {
+                    voiceCommandObject.stop();
+                    this.textContent = 'Voice Input OFF';
+                    this.setAttribute('aria-pressed', 'false');
+                    localStorage.setItem('voice-input', 'false');
                 }
             });
 
-            // init 
-            const voiceInputState = localStorage.getItem('voice-navigation') === 'true';
-
+            const voiceInputState = localStorage.getItem('voice-input') === 'true';
             EnableVoiceInput = voiceInputState;
-            if(EnableVoiceInput){
-                voiceInput.init();
-                voiceInput.start();
+            if (EnableVoiceInput) {
+                voiceCommandObject.init();
+                voiceCommandObject.start();
             }
 
-            voiceInputToggle.textContent = EnableVoiceInput ? 'Voice Navigation On' : 'Voice Navigation Off';
-            voiceInputToggle.setAttribute('aria-pressed', EnableVoiceInput.toString());
-
-
+            voiceInputToggler.textContent = EnableVoiceInput ? 'Voice Input ON' : 'Voice Input OFF';
+            voiceInputToggler.setAttribute('aria-pressed', EnableVoiceInput.toString());
         }
 
-
-        // color mode toggle 
-        const colorModeToggle = document.getElementById('color-mode-select');
-        if(colorModeToggle) {
-            colorMode.addEventListener('change', function(){
+        
+        const colorModeSelecter = document.getElementById('color-mode-select');
+        if (colorModeSelecter) {
+            colorModeSelecter.addEventListener('change', function() {
                 colorMode.setColorMode(this.value);
             });
         }
 
-        // TODO: fix this, they are workign like tab buttons ---> OR this could be a website stlying/formatting issue, depending on how it was built.
-        // font size toggles 
+
         const increaseFontSizeButton = document.getElementById('increase-text-size');
-        if(increaseFontSizeButton){
+        if (increaseFontSizeButton) {
             increaseFontSizeButton.addEventListener('click', function() {
                 adjustTextSize.increase();
             });
         }
-        
+
         const decreaseFontSizeButton = document.getElementById('decrease-text-size');
-        if(decreaseFontSizeButton){
+        if (decreaseFontSizeButton) {
             decreaseFontSizeButton.addEventListener('click', function() {
                 adjustTextSize.decrease();
             });
         }
 
-        // spacing toggle
+        // Spacing Toggles
         const increaseSpacingButton = document.getElementById('increase-spacing');
-        if(increaseSpacingButton){
+        if (increaseSpacingButton) {
             increaseSpacingButton.addEventListener('click', function() {
-                adjusSpacing.increase();
+                adjustSpacing.increase();
             });
         }
 
         const decreaseSpacingButton = document.getElementById('decrease-spacing');
-        if(decreaseSpacingButton){
+        if (decreaseSpacingButton) {
             decreaseSpacingButton.addEventListener('click', function() {
-                adjusSpacing.decrease();
+                adjustSpacing.decrease();
             });
         }
 
-        // dyslexia font toggel
-        const dyslexiaFontToggle = document.getElementById('dyslexia-font-toggle');
-        if(dyslexiaFontToggle){
-            dyslexiaFontToggle.addEventListener('click', function(){
+        // Dyslexia Font Toggle
+        const dyslexiaFontToggler = document.getElementById('dyslexia-font-toggle');
+        if (dyslexiaFontToggler) {
+            dyslexiaFontToggler.addEventListener('click', function() {
                 OpenDyslexiaFont.toggle();
-                dyslexiaFontToggle.textContent = EnableOpenDyslexiaFont ? 'Dyslexia Font (On)' : 'Dyslexia Font';
-                dyslexiaFontToggle.setAttribute('aria-pressed', EnableOpenDyslexiaFont.toString());
+                this.textContent = EnableOpenDyslexiaFont ? 'Dyslexia Font (On)' : 'Dyslexia Font';
+                this.setAttribute('aria-pressed', EnableOpenDyslexiaFont.toString());
             });
-
-
-            // init button text
-            const savedDysFontState = localStorage.getItem('Open-Dyslexia-font') === 'true';
-            EnableOpenDyslexiaFont = savedDysFontState;
-
-            if(EnableOpenDyslexiaFont){
-                document.body.classList.add('Open-Dyslexia-font');
-            }
-            
-            this.textContent = EnableOpenDyslexiaFont ? 'Dyslexia Font (On)' : 'Dyslexia Font';
-            dyslexiaFontToggle.setAttribute('aria-pressed', EnableOpenDyslexiaFont.toString());
+    
+            // Load saved state
+            OpenDyslexiaFont.loadDyslexiaFont();
+    
+            dyslexiaFontToggler.textContent = EnableOpenDyslexiaFont ? 'Dyslexia Font (On)' : 'Dyslexia Font';
+            dyslexiaFontToggler.setAttribute('aria-pressed', EnableOpenDyslexiaFont.toString());
         }
-
-
-    }); // end of event listeners/toggle section
-
-
-
-})(); // end of function
-
+    });
+})(); // end of IIFE

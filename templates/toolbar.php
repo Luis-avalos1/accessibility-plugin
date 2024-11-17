@@ -1,73 +1,58 @@
+<!-- Accessibility Toolbar with Embedded CSS -->
+
+<!-- Start of CSS and HTML combined -->
 <style>
-
-     
-    /* we want to have it so users can use dyslexia fonts if needed.  */
-    /* TODO [FIXED]:  we can host the files locally, we no longer rely on external dependencies */
-    /* THese are hosted in the fonts dir */
-
-
-    /* TODO: Figure out why these do not load. */
-    /* instantiating OpenDyslexic fonts  */
-
+    /* OpenDyslexic Fonts */
     @font-face { /* REGULAR FONT */
         font-family: 'OpenDyslexic';
-        src: url("../fonts/OpenDyslexic-Regular.woff2") format('woff2'), 
-        url("../fonts/OpenDyslexic-Regular.woff") format('woff'),
-        url("../fonts/OpenDyslexic-Regular.otf") format('opentype'),
-        url("../fonts/OpenDyslexic-Regular.eot");
-
+        src: url("../fonts/OpenDyslexic-Regular.woff2") format('woff2'),
+             url("../fonts/OpenDyslexic-Regular.woff") format('woff'),
+             url("../fonts/OpenDyslexic-Regular.otf") format('opentype'),
+             url("../fonts/OpenDyslexic-Regular.eot");
         font-weight: normal;
         font-style: normal;
         font-display: swap;
-    
     }
 
-    @font-face { /* ITALICS FONT */
+    @font-face { /* ITALIC FONT */
         font-family: 'OpenDyslexic';
-        src: url("../fonts/OpenDyslexic-Italic.woff2") format('woff2'), 
-        url("../fonts/OpenDyslexic-Italic.woff") format('woff'),
-        url("../fonts/OpenDyslexic-Italic.otf") format('opentype'),
-        url("../fonts/OpenDyslexic-Italic.eot");
-
+        src: url("../fonts/OpenDyslexic-Italic.woff2") format('woff2'),
+             url("../fonts/OpenDyslexic-Italic.woff") format('woff'),
+             url("../fonts/OpenDyslexic-Italic.otf") format('opentype'),
+             url("../fonts/OpenDyslexic-Italic.eot");
         font-weight: normal;
         font-style: italic;
         font-display: swap;
-    
-    }   
+    }
 
     @font-face { /* BOLD FONT */
         font-family: 'OpenDyslexic';
-        src: url("../fonts/OpenDyslexic-Bold.woff2") format('woff2'), 
-        url("../fonts/OpenDyslexic-Bold.woff") format('woff'),
-        url("../fonts/OpenDyslexic-Bold.otf") format('opentype'),
-        url("../fonts/OpenDyslexic-Bold.eot");
-
+        src: url("../fonts/OpenDyslexic-Bold.woff2") format('woff2'),
+             url("../fonts/OpenDyslexic-Bold.woff") format('woff'),
+             url("../fonts/OpenDyslexic-Bold.otf") format('opentype'),
+             url("../fonts/OpenDyslexic-Bold.eot");
         font-weight: bold;
         font-style: normal;
         font-display: swap;
-    
     }
 
-    @font-face { /* BOlD-ITALIC FONT */
+    @font-face { /* BOLD-ITALIC FONT */
         font-family: 'OpenDyslexic';
-        src: url("../fonts/OpenDyslexic-Bold-Italic.woff2") format('woff2'), 
-        url("../fonts/OpenDyslexic-Bold-Italic.woff") format('woff'),
-        url("../fonts/OpenDyslexic-Bold-Italic.otf") format('opentype'),
-        url("../fonts/OpenDyslexic-Bold-Italic.eot");
-
+        src: url("../fonts/OpenDyslexic-Bold-Italic.woff2") format('woff2'),
+             url("../fonts/OpenDyslexic-Bold-Italic.woff") format('woff'),
+             url("../fonts/OpenDyslexic-Bold-Italic.otf") format('opentype'),
+             url("../fonts/OpenDyslexic-Bold-Italic.eot");
         font-weight: bold;
         font-style: italic;
         font-display: swap;
-    
     }
 
-    /* Dyslexic Font Fallback Mech. */
-    body.accesibility-dyslexia-fonts {
-        font-family: 'OpenDyslexic', Arial, Helvetica, sans-serif !important;
+    /* Dyslexia Font Fallback Mechanism */
+    body.accessibility-dyslexia-fonts {
+        font-family: 'OpenDyslexic' !important;
     }
 
-    /* TODO: Fix any color or sizes issues --> this wil prolly look bad not good at css / artsy */
-    /* TOOL BAR */
+    /* Toolbar Styling */
     #toolbar {
         position: fixed;
         bottom: 25px;
@@ -85,35 +70,41 @@
     #toolbar:hover {
         box-shadow: 0 4px 18px rgba(0,0,0, 0.15);
     }
-    #toolbar:focus{
+
+    #toolbar:focus {
         outline: 2px midnightblue;
-        box-shadow: 0 0 0 3px rgba(0, 123,255, 0.5);
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
     }
-    /* TOOL BAR buttons */
+
+    /* Toolbar Buttons */
     .accessibility-button {
         background-color: lightblue;
         border: none;
         border-radius: 8px;
-        margin: 6px 0 ;
+        margin: 6px 0;
         padding: 10px 15px;
         font-size: 15px;
         width: 100%;
         cursor: pointer;
         transition: background-color 0.3s ease;
     }
-    .accessibility-button:hover{
+
+    .accessibility-button:hover {
         background-color: #0056b3;
-    }
-    .accessibility-button:focus{
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(0, 123,255, 0.5);
+        color: white;
     }
 
-    /* select wrapping */
+    .accessibility-button:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+    }
+
+    /* Select Wrapping */
     .select-wrapping {
         margin: 10px 0;
     }
-    .select-wrapping label{
+
+    .select-wrapping label {
         display: block;
         font-size: 15px;
         margin-bottom: 5px;
@@ -133,85 +124,76 @@
         background-position: right 8px center;
         background-size: 8px 10px;
     }
-    .select:focus{
+
+    .select:focus {
         outline: none;
         border-color: lightskyblue;
-        box-shadow: 0 0 0 3px rgba(0, 123,255, 0.25);
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
     }
 
-    /* TODO: Finish */
-    /* Color mode  */
+    /* Color Modes */
     body.color-mode-protanopia {
         filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(300%);
+    }
+
+    body.color-mode-deuteranopia {
+        filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(200%);
     }
 
     body.color-mode-tritanopia {
         filter: grayscale(100%) sepia(100%) hue-rotate(50deg) saturate(300%);
     }
 
-    body.color-mode-deuteranopia {
-        filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(200%);
-    }
-    body.high-contrast {
+    body.color-mode-high-contrast {
         --background-color: #000000;
         --text-color: #FFFFFF;
         --link-color: #00FFFF;
         --button-background: #333333;
         --button-text: #FFFFFF;
-    }
-
-    body.color-mode-default{
-        filter: none;
-    }
-
-    /* TODO: lets see how this looks in testing --> if it can look better we will use */
-
-    /* TODO: instead of attempting to maniuplate using values, we can use SVG filters */
-    /* Protanopia Simulation */
-    body.protanopia {
-        filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(300%);
-    }
-
-    /* Deuteranopia Simulation */
-    body.deuteranopia {
-        filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(200%);
-    }
-
-    /* Tritanopia Simulation */
-    body.tritanopia {
-        filter: grayscale(100%) sepia(100%) hue-rotate(50deg) saturate(300%);
-    }
-
-    body.color-mode-high-contrast {
-        background-color: var(--background-color, #000);
-        color: var(--text-color, #FFF);
+        background-color: var(--background-color);
+        color: var(--text-color);
     }
 
     body.color-mode-high-contrast a {
-        color: var(--link-color, #00FFFF);
+        color: var(--link-color);
     }
 
     body.color-mode-high-contrast button {
-        background-color: var(--button-background, #333);
-        color: var(--button-text, #FFF);
+        background-color: var(--button-background);
+        color: var(--button-text);
     }
 
-</style>    
+    body.color-mode-default {
+        filter: none;
+    }
 
+    /* Ensure Toolbar Stays Fixed in Color Modes */
+    body[class*="color-mode-"] #toolbar {
+        position: fixed;
+    }
 
-<!-- this will be a toolbar for our plugin -->
+    /* Keyboard Focused Element */
+    .keyboard-focused {
+        outline: 2px solid red !important;
+    }
+</style>
+
+<!-- Accessibility Toolbar -->
 <div id="toolbar" role="navigation" aria-label="Accessibility Toolbar">
 
-    <button id="screen-reader-toggle" class="accessibility-button" aria-pressed="false">
+    <button id="screen-reader-toggle" class="accessibility-button" aria-pressed="false" aria-label="Toggle Screen Reader">
         <span class="accessibility-button-label">Screen Reader</span>
     </button>
 
-    <button id="voice-input-toggle" class='accessibility-button' aria-pressed="false">
+    <button id="voice-input-toggle" class="accessibility-button" aria-pressed="false" aria-label="Toggle Voice Input">
         <span class="accessibility-button-label">Voice Input</span>
     </button>
 
-    <button id="keyboard-navigation-toggle" class='accessibility-button' aria-pressed="false">
-        <span class="accessibility-button-label">keyboard navigation</span>
+    <!-- Voice Input Status Indicator -->
+    <div id="voice-input-status" aria-live="polite" style="margin-top: 10px; font-size: 15px; color: darkgreen;"></div>
+
+    <button id="keyboard-navigation-toggle" class="accessibility-button" aria-pressed="false" aria-label="Toggle Keyboard Navigation">
+        <span class="accessibility-button-label">Keyboard Navigation</span>
     </button>
 
     <button id="increase-text-size" class="accessibility-button" aria-label="Increase Text Size">
@@ -230,11 +212,11 @@
         <span class="accessibility-button-label">Decrease Spacing</span>
     </button>
 
-    <button id="OpenDyslexic" class="accessibility-button" aria-pressed="false">
-        <span class="dyslexia-font-toggle">Dyslexia Font</span>
+    <button id="dyslexia-font-toggle" class="accessibility-button" aria-pressed="false" aria-label="Toggle Dyslexia Font">
+        <span class="accessibility-button-label">Dyslexia Font</span>
     </button>
 
-    <!-- Wrap the select element in a div with class 'select-wrapping' and include a label -->
+    <!-- Color Mode Select -->
     <div class="select-wrapping">
         <label for="color-mode-select">Color Mode</label>
         <select id="color-mode-select" class="select" aria-label="Select Color Mode">
@@ -246,4 +228,6 @@
         </select>
     </div>
 
-</div> <!-- end of master div -->
+</div> <!-- End of Toolbar -->
+
+
