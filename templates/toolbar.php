@@ -52,8 +52,11 @@
         font-family: 'OpenDyslexic' !important;
     }
 
-    /* Toolbar Styling */
+
+    
+    /* styling toolbar */
     #toolbar {
+
         position: fixed;
         bottom: 25px;
         right: 25px;
@@ -178,6 +181,9 @@
     }
 </style>
 
+
+
+
 <!-- Accessibility Toolbar -->
 <div id="toolbar" role="navigation" aria-label="Accessibility Toolbar">
 
@@ -189,6 +195,8 @@
         <span class="accessibility-button-label">Voice Input</span>
     </button>
 
+
+    
     <!-- Voice Input Status Indicator -->
     <div id="voice-input-status" aria-live="polite" style="margin-top: 10px; font-size: 15px; color: darkgreen;"></div>
 

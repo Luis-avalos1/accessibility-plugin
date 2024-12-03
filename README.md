@@ -15,10 +15,15 @@ The Lasagna Love Accessibility Plugin is designed to enhance the user experience
 **Keyboard Navigation:** Assits users by allowing them to navigate the site via the arrows. The user can visually see where they are on the website.
 
 **Color Blindness Mode:** Allows user to change the color mode of the website. 
+    
     **-Deutronopia**
+
     **-Tritanopia**
+
     **-Protanopia**
+
     **-High Contrasts**
+    
 
 **Screen Reader + Keyboard Navigation Enabled:** When the screen reader and the keyboard navigation are both enabled the user can navigate the site and the screen reader will read whatever element the keyboard navigation is/will be on. 
 
