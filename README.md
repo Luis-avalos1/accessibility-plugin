@@ -33,18 +33,10 @@ The Lasagna Love Accessibility Plugin is designed to enhance the user experience
 
 **WCAG Compliance:** Built in accordance with Web Content Accessibility Guidelines to ensure inclusivity and usability.
 
-## Team Members
+## Developers
 This project is developed by the following team members as part of the Lasagna Love initiative:
 
 **Luis Avalos**
-
-**Ernesto Perez**
-
-**Isaac Quintanilla**
-
-**Tyler Tait**
-
-**Hanna Mekonnen**
 
 ## Project Goals
 The main goal of this project is to create an intuitive, user-friendly plugin that addresses the needs of users with visual impairments. Our team is dedicated to improving the accessibility of the Lasagna Love platform by providing a reliable screen reading solution that enhances user engagement and experience.
