@@ -102,15 +102,7 @@ The plugin automatically adds an accessibility toolbar to your website. Users ca
 - Navigate using keyboard or voice commands
 - Experience enhanced screen reader functionality
 
-## Development Team
 
-This project is developed by the Lasagna Love accessibility team:
-
-- **Luis Avalos** - Lead Developer
-- **Ernesto Perez** - Developer  
-- **Isaac Quintanilla** - Developer
-- **Tyler Tait** - Developer
-- **Hanna Mekonnen** - Developer
 
 ## Project Goals
 
