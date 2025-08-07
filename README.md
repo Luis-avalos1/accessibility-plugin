@@ -1,45 +1,114 @@
 # Lasagna Love Accessibility Plugin
 
-## Overview
-The Lasagna Love Accessibility Plugin is designed to enhance the user experience for visually impaired users by providing screen reading functionality. This plugin ensures that all visitors, regardless of their visual abilities, can effectively navigate and access the content of the Lasagna Love website. The project is focused on building a tool that integrates seamlessly into WordPress, improving the overall accessibility of the site.
+A comprehensive WordPress accessibility plugin that enhances website usability for users with disabilities through advanced screen reading, keyboard navigation, and visual adjustment features.
 
-## Accessibility Plugin Features
-**Screen Reader Support:** Assists visually impaired users by reading aloud the website content.
+## Features
 
-**Voice Command Navigation:** Assits users by allowing them to navigate the website via a set of voice commands.
-    **Voice Commands List:**
+### 🎵 Screen Reader Support
+Provides text-to-speech functionality using the Web Speech API to read website content aloud for visually impaired users.
+
+### 🎤 Voice Command Navigation
+Enables hands-free website navigation through voice recognition commands.
+
+### 🔤 Dyslexia-Friendly Font
+Transforms website text to OpenDyslexic font for improved readability for users with dyslexia.
+
+### ⌨️ Keyboard Navigation
+Enhanced arrow key navigation with visual indicators showing current focus position on the page.
+
+### 🎨 Color Vision Accessibility
+Multiple colorblind-friendly modes including:
+- **Deuteranopia** - Red-green colorblind support
+- **Tritanopia** - Blue-yellow colorblind support  
+- **Protanopia** - Red-green colorblind support
+- **High Contrast** - Enhanced contrast for low vision users
+
+### 🔄 Integrated Navigation
+Seamless combination of screen reader and keyboard navigation - the screen reader automatically announces focused elements during keyboard navigation.
+
+### 📏 Typography Controls
+- **Font Size Adjustment** - Increase/decrease text size for better readability
+- **Letter Spacing** - Adjust character spacing for improved text clarity
+
+### ✅ WCAG Compliance
+Built following Web Content Accessibility Guidelines (WCAG) standards for maximum inclusivity.
+
+## Technical Implementation
+
+### Script Enqueue System
+The plugin uses WordPress's standard script enqueuing system through `script-enqueue.php`:
+
+```php
+// Enqueues the main accessibility JavaScript file
+wp_enqueue_script(
+    'plugin-js', 
+    plugin_dir_url( __FILE__ ) . 'js/accessibility-plugin.js',
+    array(),
+    '1.0',
+    true
+);
+```
+
+### Core JavaScript Architecture
+- **IIFE Pattern**: Uses Immediately Invoked Function Expression to avoid global scope pollution
+- **Web Speech APIs**: Leverages `speechSynthesis` and `SpeechRecognition` for audio features
+- **State Management**: Maintains feature states (`EnableScreenReader`, `EnableKeyboardNavigation`, etc.)
+- **Browser Compatibility**: Includes fallbacks and feature detection
+
+### WordPress Integration
+- Hooks into `wp_enqueue_scripts` for proper script loading
+- Uses `wp_body_open` or `wp_head` for toolbar injection
+- Follows WordPress plugin standards and security practices
+
+## Installation
+
+### Prerequisites
+- WordPress 5.0 or higher
+- PHP 7.4 or higher
+- Modern web browser with Web Speech API support
+
+### Setup Instructions
+
+1. **Upload Plugin Files**
+   ```bash
+   # Upload the entire plugin directory to your WordPress plugins folder
+   wp-content/plugins/accessibility-plugin/
+   ```
+
+2. **Activate the Plugin**
+   - Navigate to WordPress Admin → Plugins
+   - Find "Accessibility Plugin" and click "Activate"
+
+3. **Verify Installation**
+   - The accessibility toolbar should appear on your website
+   - JavaScript file is automatically enqueued via `script-enqueue.php`
+
+### File Structure
+```
+accessibility-plugin/
+├── script-enqueue.php          # Main plugin file & script enqueuing
+├── js/
+│   └── accessibility-plugin.js # Core functionality
+├── templates/
+│   └── toolbar.php             # Accessibility toolbar UI
+└── README.md
+```
+
+## Usage
+
+The plugin automatically adds an accessibility toolbar to your website. Users can:
+- Toggle individual accessibility features on/off
+- Adjust typography settings in real-time
+- Navigate using keyboard or voice commands
+- Experience enhanced screen reader functionality
 
 
-**Dyslexia Font Mode:** Replaces the exisitng font of a website into the OpenDyslexia font style.
-
-**Keyboard Navigation:** Assits users by allowing them to navigate the site via the arrows. The user can visually see where they are on the website.
-
-**Color Blindness Mode:** Allows user to change the color mode of the website. 
-    
-    **-Deutronopia**
-
-    **-Tritanopia**
-
-    **-Protanopia**
-
-    **-High Contrasts**
-    
-
-**Screen Reader + Keyboard Navigation Enabled:** When the screen reader and the keyboard navigation are both enabled the user can navigate the site and the screen reader will read whatever element the keyboard navigation is/will be on. 
-
-**Adjusting Font Size:** Allows user to increase or decrease the site's font size.
-
-**Adjusting Letter Spacing:** Allows user to increase or decrease the site's letter spacing. 
-
-**WCAG Compliance:** Built in accordance with Web Content Accessibility Guidelines to ensure inclusivity and usability.
-
-## Developers
-This project is developed by the following team members as part of the Lasagna Love initiative:
-
-**Luis Avalos**
 
 ## Project Goals
-The main goal of this project is to create an intuitive, user-friendly plugin that addresses the needs of users with visual impairments. Our team is dedicated to improving the accessibility of the Lasagna Love platform by providing a reliable screen reading solution that enhances user engagement and experience.
 
-## Installation and Usage
-Instructions for installing and using the plugin will be provided upon completion. This plugin is designed to be easily integrated with WordPress and requires minimal configuration.
+Create an intuitive, comprehensive accessibility solution that addresses diverse user needs through:
+- Advanced screen reading capabilities
+- Multi-modal navigation options
+- Visual accessibility enhancements
+- WCAG compliance standards
+- Seamless WordPress integration
