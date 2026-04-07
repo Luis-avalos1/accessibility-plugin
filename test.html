@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessibility Plugin Test</title>
+    <style>
+        /* Include the CSS from toolbar.php manually for testing */
+        @font-face {
+            font-family: 'OpenDyslexic';
+            src: url("fonts/OpenDyslexic-Regular.woff2") format('woff2'),
+                 url("fonts/OpenDyslexic-Regular.woff") format('woff'),
+                 url("fonts/OpenDyslexic-Regular.otf") format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        body.accessibility-dyslexia-fonts {
+            font-family: 'OpenDyslexic' !important;
+        }
+        
+        #toolbar {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: rgba(255, 255, 255, 0.98);
+            border-radius: 10px;
+            padding: 20px;
+            z-index: 10000;
+            box-shadow: 0 4px 15px rgba(0,0,0, 0.1);
+            width: 280px;
+        }
+        
+        .accessibility-button {
+            background-color: lightblue;
+            border: none;
+            border-radius: 8px;
+            margin: 6px 0;
+            padding: 10px 15px;
+            font-size: 15px;
+            width: 100%;
+            cursor: pointer;
+        }
+        
+        .select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #CCCCCC;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+        
+        .keyboard-focused {
+            outline: 2px solid red !important;
+        }
+        
+        body.color-mode-high-contrast {
+            background-color: #000000;
+            color: #FFFFFF;
+        }
+        
+        .test-content {
+            margin: 50px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-content">
+        <h1>Accessibility Plugin Test Page</h1>
+        <p>This is a test page to verify the accessibility plugin functionality.</p>
+        
+        <button>Test Button 1</button>
+        <button>Test Button 2</button>
+        
+        <a href="#test">Test Link</a>
+        
+        <input type="text" placeholder="Test input field">
+        
+        <p>Use the toolbar on the bottom right to test various accessibility features.</p>
+    </div>
+
+    <!-- Toolbar HTML -->
+    <div id="toolbar" role="navigation" aria-label="Accessibility Toolbar">
+        <button id="screen-reader-toggle" class="accessibility-button" aria-pressed="false">
+            Screen Reader OFF
+        </button>
+        
+        <button id="voice-input-toggle" class="accessibility-button" aria-pressed="false">
+            Voice Input OFF
+        </button>
+        
+        <div id="voice-input-status" style="margin-top: 10px; font-size: 15px; color: darkgreen;"></div>
+        
+        <button id="keyboard-navigation-toggle" class="accessibility-button" aria-pressed="false">
+            Keyboard Navigation OFF
+        </button>
+        
+        <button id="increase-text-size" class="accessibility-button">
+            Increase Text Size
+        </button>
+        
+        <button id="decrease-text-size" class="accessibility-button">
+            Decrease Text Size
+        </button>
+        
+        <button id="increase-spacing" class="accessibility-button">
+            Increase Spacing
+        </button>
+        
+        <button id="decrease-spacing" class="accessibility-button">
+            Decrease Spacing
+        </button>
+        
+        <button id="dyslexia-font-toggle" class="accessibility-button" aria-pressed="false">
+            Dyslexia Font
+        </button>
+        
+        <div class="select-wrapping" style="margin: 10px 0;">
+            <label for="color-mode-select">Color Mode</label>
+            <select id="color-mode-select" class="select">
+                <option value="default">Default</option>
+                <option value="protanopia">Protanopia</option>
+                <option value="deuteranopia">Deuteranopia</option>
+                <option value="tritanopia">Tritanopia</option>
+                <option value="high-contrast">High Contrast</option>
+            </select>
+        </div>
+    </div>
+
+    <script src="js/accessibility-plugin.js"></script>
+</body>
+</html>

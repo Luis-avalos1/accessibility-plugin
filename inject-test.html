@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Accessibility Plugin on Any Website</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .instruction { background: #f0f8ff; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .bookmarklet { 
+            background: #0066cc; 
+            color: white; 
+            padding: 10px 20px; 
+            text-decoration: none; 
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        code { background: #f5f5f5; padding: 2px 4px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Test Accessibility Plugin</h1>
+    
+    <div class="instruction">
+        <h2>Method 1: Bookmarklet (Works on ANY website)</h2>
+        <p>1. Drag this button to your bookmarks bar:</p>
+        <a href="javascript:(function(){var s=document.createElement('script');s.src='file:///Users/luisavalos/repos/accessibility-plugin/bookmarklet.js';document.head.appendChild(s);})();" class="bookmarklet">
+            📋 Accessibility Tools
+        </a>
+        <p>2. Visit any website (like Google, Wikipedia, etc.)</p>
+        <p>3. Click the bookmark to add accessibility toolbar</p>
+        <p>4. Test keyboard navigation with arrow keys after clicking "Keyboard Nav ON"</p>
+    </div>
+
+    <div class="instruction">
+        <h2>Method 2: Browser Console (Quick test)</h2>
+        <p>1. Visit any website</p>
+        <p>2. Press F12 to open developer tools</p>
+        <p>3. Go to Console tab</p>
+        <p>4. Copy and paste this code:</p>
+        <code>
+var s=document.createElement('script');
+s.textContent=`${document.querySelector('#bookmarklet-code').textContent}`;
+document.head.appendChild(s);
+        </code>
+    </div>
+
+    <div class="instruction">
+        <h2>Method 3: Test Sites</h2>
+        <p>Try it on these websites:</p>
+        <ul>
+            <li><a href="https://google.com" target="_blank">Google</a></li>
+            <li><a href="https://wikipedia.org" target="_blank">Wikipedia</a></li>
+            <li><a href="https://github.com" target="_blank">GitHub</a></li>
+            <li><a href="https://reddit.com" target="_blank">Reddit</a></li>
+        </ul>
+    </div>
+
+    <h2>🧪 Test Page Content</h2>
+    <button onclick="alert('Button 1 clicked!')">Test Button 1</button>
+    <button onclick="alert('Button 2 clicked!')">Test Button 2</button>
+    <p><a href="#test">Test Link</a></p>
+    <input type="text" placeholder="Type here...">
+    <select>
+        <option>Option 1</option>
+        <option>Option 2</option>
+    </select>
+
+    <p>This page has focusable elements to test keyboard navigation.</p>
+
+    <script id="bookmarklet-code" type="text/plain">
+// Paste the bookmarklet content here for console testing
+    </script>
+
+    <script>
+        // Add the bookmarklet content to the hidden script tag
+        fetch('bookmarklet.js')
+            .then(r => r.text())
+            .then(code => {
+                document.querySelector('#bookmarklet-code').textContent = code;
+            });
+    </script>
+</body>
+</html>
