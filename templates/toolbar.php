@@ -5,10 +5,10 @@
     /* OpenDyslexic Fonts */
     @font-face { /* REGULAR FONT */
         font-family: 'OpenDyslexic';
-        src: url("../fonts/OpenDyslexic-Regular.woff2") format('woff2'),
-             url("../fonts/OpenDyslexic-Regular.woff") format('woff'),
-             url("../fonts/OpenDyslexic-Regular.otf") format('opentype'),
-             url("../fonts/OpenDyslexic-Regular.eot");
+        src: url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Regular.woff2") format('woff2'),
+             url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Regular.woff") format('woff'),
+             url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Regular.otf") format('opentype'),
+             url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Regular.eot");
         font-weight: normal;
         font-style: normal;
         font-display: swap;
@@ -16,10 +16,10 @@
 
     @font-face { /* ITALIC FONT */
         font-family: 'OpenDyslexic';
-        src: url("../fonts/OpenDyslexic-Italic.woff2") format('woff2'),
-             url("../fonts/OpenDyslexic-Italic.woff") format('woff'),
-             url("../fonts/OpenDyslexic-Italic.otf") format('opentype'),
-             url("../fonts/OpenDyslexic-Italic.eot");
+        src: url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Italic.woff2") format('woff2'),
+             url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Italic.woff") format('woff'),
+             url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Italic.otf") format('opentype'),
+             url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Italic.eot");
         font-weight: normal;
         font-style: italic;
         font-display: swap;
@@ -27,10 +27,10 @@
 
     @font-face { /* BOLD FONT */
         font-family: 'OpenDyslexic';
-        src: url("../fonts/OpenDyslexic-Bold.woff2") format('woff2'),
-             url("../fonts/OpenDyslexic-Bold.woff") format('woff'),
-             url("../fonts/OpenDyslexic-Bold.otf") format('opentype'),
-             url("../fonts/OpenDyslexic-Bold.eot");
+        src: url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Bold.woff2") format('woff2'),
+             url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Bold.woff") format('woff'),
+             url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Bold.otf") format('opentype'),
+             url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Bold.eot");
         font-weight: bold;
         font-style: normal;
         font-display: swap;
@@ -38,10 +38,10 @@
 
     @font-face { /* BOLD-ITALIC FONT */
         font-family: 'OpenDyslexic';
-        src: url("../fonts/OpenDyslexic-Bold-Italic.woff2") format('woff2'),
-             url("../fonts/OpenDyslexic-Bold-Italic.woff") format('woff'),
-             url("../fonts/OpenDyslexic-Bold-Italic.otf") format('opentype'),
-             url("../fonts/OpenDyslexic-Bold-Italic.eot");
+        src: url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Bold-Italic.woff2") format('woff2'),
+             url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Bold-Italic.woff") format('woff'),
+             url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Bold-Italic.otf") format('opentype'),
+             url("<?php echo plugin_dir_url(__FILE__); ?>../fonts/OpenDyslexic-Bold-Italic.eot");
         font-weight: bold;
         font-style: italic;
         font-display: swap;

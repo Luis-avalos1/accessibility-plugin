@@ -1,0 +1,18 @@
+# Claude Code
+.claude/
+CLAUDE.md
+.claude.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node
+node_modules/
+npm-debug.log*

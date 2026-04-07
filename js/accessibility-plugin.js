@@ -13,7 +13,7 @@
 
     // initial settings --> these can be changed via methods below!
     let fontSize = 100;
-    let letterSpac =0;
+    let letterSpacing = 0;
     let lineHeight = 1.5;
 
 
@@ -38,8 +38,11 @@
         // ttt == text to speech ,  converts text to speech via web speech api 
         //  takes in a textm and using the utterance obj it will speak it. 
         tts: function(text) {
+            if (!text || typeof text !== 'string') {
+                return;
+            }
 
-            // we want to only use this if the screen reader is enables and our sppech synth api is supported in our browser
+            // we want to only use this if the screen reader is enabled and our speech synth api is supported in our browser
             if (EnableScreenReader && speechSynthSupport) {
 
                 // case where if it has been talking, to stop --> keyboard nav related
@@ -62,6 +65,9 @@
 
         // method that extract the labeling on an element on our website, --> usually this is for buttons or redirect elements --> we can read them
         readingAnElement: function(element) {
+            if (!element) {
+                return;
+            }
             // works by checking html semantics --> has fallback methods 
             const ttsText = element.getAttribute('aria-label') || element.alt || element.title || element.textContent || element.innerText || '';
             // read what we have extracted
@@ -116,12 +122,12 @@
         // want some elements that keep track of where we are!
         currentlyFocusedElement: null,
         previouslyFocusedElement: null,
-        bindingHnadleKeyDown: null,
+        boundHandleKeyDown: null,
 
 
         init: function() {
             this.boundHandleKeyDown = this.handleKeyDown.bind(this);
-            document.addEventListener('keydown', this.bindingHnadleKeyDown);
+            document.addEventListener('keydown', this.boundHandleKeyDown);
             // Add initial focus to the first focusable element
             const focusableElements = this.parseFocusableElems();
             if (focusableElements.length > 0) {
@@ -132,12 +138,12 @@
 
 
         disable: function() {
-            document.removeEventListener('keydown', this.bindingHnadleKeyDown);
+            document.removeEventListener('keydown', this.boundHandleKeyDown);
             if (this.currentlyFocusedElement) {
                 this.currentlyFocusedElement.classList.remove('keyboard-focused');
             }
-            this.currentFocusedElement = null;
-            this.previousFocusedElement = null;
+            this.currentlyFocusedElement = null;
+            this.previouslyFocusedElement = null;
         },
 
 
@@ -186,6 +192,9 @@
 
 
         currentElement: function(element) {
+            if (!element) {
+                return;
+            }
             if (this.currentlyFocusedElement) {
                 this.currentlyFocusedElement.classList.remove('keyboard-focused');
             }
@@ -205,6 +214,9 @@
 
         navigate: function(direction) {
             const focusableElements = this.parseFocusableElems();
+            if (focusableElements.length === 0) {
+                return;
+            }
             const currentIndex = focusableElements.indexOf(this.currentlyFocusedElement);
             let nextIndex;
 
@@ -269,7 +281,7 @@
             
             // update on our toolbar that voice input is being listened to. 
             this.voiceRecognition.onstart = () => {
-                this.isListening = true;
+                this.isCurrentlyListening = true;
                 this.updateCurrentVoiceInputIndicatorStatus(true);
             };
 
@@ -278,7 +290,7 @@
             // stop listening 
             this.voiceRecognition.onend = () => {
 
-                this.isListening = false;
+                this.isCurrentlyListening = false;
                 this.updateCurrentVoiceInputIndicatorStatus(false);
 
                 // Automatically restart recognition if still enabled
@@ -445,10 +457,13 @@
 
         // load the font size so that we cann see the changes
         loadFontSize: function() {
-
             // loading 
             const savedFontSize = localStorage.getItem('adjust-text-size');
-            fontSize = savedFontSize ? parseInt(savedFontSize, 10) : 100;
+            if (savedFontSize && !isNaN(parseInt(savedFontSize, 10))) {
+                fontSize = parseInt(savedFontSize, 10);
+            } else {
+                fontSize = 100;
+            }
             document.body.style.fontSize = fontSize + '%';
         }
     };
@@ -462,17 +477,17 @@
         increaseSpacing: function() {
 
             // increase
-            letterSpac+=0.5;
+            letterSpacing += 0.5;
             lineHeight += 0.1;
 
 
             // appliyng
-            document.body.style.letterSpacing = letterSpac + 'px';
+            document.body.style.letterSpacing = letterSpacing + 'px';
             document.body.style.lineHeight = lineHeight;
 
 
             // setting it to our website
-            localStorage.setItem('adjust-letter-spacing', letterSpac);
+            localStorage.setItem('adjust-letter-spacing', letterSpacing);
             localStorage.setItem('adjust-line-spacing', lineHeight);
 
         }, 
@@ -481,17 +496,17 @@
 
         decreaseSpacing: function() {
             // decerqse : checking to see if the decrease amount does not go below 0 & 1.0
-            letterSpac = Math.max(0, letterSpac - 0.5);
+            letterSpacing = Math.max(0, letterSpacing - 0.5);
             lineHeight = Math.max(1.0, lineHeight - 0.1);
             
 
             // applying
-            document.body.style.letterSpacing = letterSpac + 'px';
+            document.body.style.letterSpacing = letterSpacing + 'px';
             document.body.style.lineHeight = lineHeight;
 
 
             // setting
-            localStorage.setItem('adjust-letter-spacing', letterSpac);
+            localStorage.setItem('adjust-letter-spacing', letterSpacing);
             localStorage.setItem('adjust-line-spacing', lineHeight);
 
         }, 
@@ -506,16 +521,16 @@
             const savedHeight = localStorage.getItem('adjust-line-spacing');
             
             // apppoying 
-            if(savedLetter) 
+            if(savedLetter && !isNaN(parseFloat(savedLetter))) 
             {
-                letterSpac = parseFloat(savedLetter);
-                document.body.style.letterSpacing = letterSpac;
+                letterSpacing = parseFloat(savedLetter);
+                document.body.style.letterSpacing = letterSpacing + 'px';
             }
 
-            if(savedHeight) 
+            if(savedHeight && !isNaN(parseFloat(savedHeight))) 
             {
                 lineHeight = parseFloat(savedHeight);
-                document.body.style.lineHeight  = lineHeight;
+                document.body.style.lineHeight = lineHeight;
             }
         }
 

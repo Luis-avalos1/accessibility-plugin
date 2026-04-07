@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>A11y Companion</title>
+  <style>
+    body { font-family: -apple-system, system-ui, sans-serif; width: 260px; margin: 0; padding: 14px; color: #111; }
+    h1 { font-size: 15px; margin: 0 0 10px; }
+    button { width: 100%; padding: 10px; margin: 4px 0; border: none; border-radius: 8px; background: #f1f5f9; cursor: pointer; font-size: 13px; }
+    button.primary { background: #2563eb; color: #fff; }
+    button:hover { filter: brightness(0.96); }
+    p { font-size: 12px; color: #475569; margin: 8px 0 0; }
+    kbd { background: #e2e8f0; padding: 1px 5px; border-radius: 4px; font-size: 11px; }
+  </style>
+</head>
+<body>
+  <h1>A11y Companion</h1>
+  <button class="primary" id="toggle">Show / hide toolbar</button>
+  <button id="reset">Reset all settings</button>
+  <p>Shortcut: <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd></p>
+  <p>The toolbar appears in the bottom-right of every page. Settings sync across all your sites.</p>
+  <script src="popup.js"></script>
+</body>
+</html>
