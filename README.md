@@ -1,114 +1,120 @@
-# Lasagna Love Accessibility Plugin
+# A11y Companion
 
-A comprehensive WordPress accessibility plugin that enhances website usability for users with disabilities through advanced screen reading, keyboard navigation, and visual adjustment features.
+A personal accessibility toolbar that works on **any** website. Originally built as a WordPress plugin (capstone project), now also available as a Chrome extension so users can install it once and have it follow them across the web.
+
+> **Reframe:** this is not just for blind users. It's for anyone with dyslexia, ADHD, low vision, color blindness, light sensitivity, aging eyes, or anyone who just wants the web to be easier to read.
+
+---
+
+## Two ways to use it
+
+### 1. Chrome Extension (recommended)
+Works on every website. Settings sync across all your sites and devices. See [`extension/README.md`](extension/README.md) for install and dev instructions.
+
+### 2. WordPress Plugin (original)
+Drop into any WordPress site to give visitors an embedded accessibility toolbar. See **WordPress Plugin** section below.
+
+---
 
 ## Features
 
-### 🎵 Screen Reader Support
-Provides text-to-speech functionality using the Web Speech API to read website content aloud for visually impaired users.
+- 📏 **Text size & spacing** — adjust font size, letter spacing, line height
+- 🔤 **Dyslexia-friendly font** — OpenDyslexic
+- 📖 **Reading mode** — strips a page down to its main content (walks up the DOM from `<main>` and dims siblings)
+- 🎨 **Color modes** — grayscale, invert/dark, high contrast, and real `feColorMatrix` simulations of protanopia, deuteranopia, and tritanopia
+- 🔊 **Screen reader** — Web Speech API
+- 🎤 **Voice commands** — "scroll down", "read page", "bigger text", "dark mode", "click sign in", etc.
+- ⌨️ **Keyboard navigation** — arrow keys to walk focusable elements with a visible focus ring
+- 🔄 **Cross-site sync** (extension only) — change a setting once, it follows you everywhere
 
-### 🎤 Voice Command Navigation
-Enables hands-free website navigation through voice recognition commands.
+---
 
-### 🔤 Dyslexia-Friendly Font
-Transforms website text to OpenDyslexic font for improved readability for users with dyslexia.
+## Chrome Extension
 
-### ⌨️ Keyboard Navigation
-Enhanced arrow key navigation with visual indicators showing current focus position on the page.
+### Install (development)
 
-### 🎨 Color Vision Accessibility
-Multiple colorblind-friendly modes including:
-- **Deuteranopia** - Red-green colorblind support
-- **Tritanopia** - Blue-yellow colorblind support  
-- **Protanopia** - Red-green colorblind support
-- **High Contrast** - Enhanced contrast for low vision users
+1. Open `chrome://extensions`
+2. Enable **Developer mode** (top right)
+3. Click **Load unpacked**
+4. Select the `extension/` directory
 
-### 🔄 Integrated Navigation
-Seamless combination of screen reader and keyboard navigation - the screen reader automatically announces focused elements during keyboard navigation.
+### Use it
 
-### 📏 Typography Controls
-- **Font Size Adjustment** - Increase/decrease text size for better readability
-- **Letter Spacing** - Adjust character spacing for improved text clarity
+- The toolbar appears in the bottom-right of every page
+- Press **Alt + Shift + A** to toggle the toolbar
+- Click the puzzle-piece icon → A11y Companion → popup for global controls
 
-### ✅ WCAG Compliance
-Built following Web Content Accessibility Guidelines (WCAG) standards for maximum inclusivity.
+### Architecture
 
-## Technical Implementation
-
-### Script Enqueue System
-The plugin uses WordPress's standard script enqueuing system through `script-enqueue.php`:
-
-```php
-// Enqueues the main accessibility JavaScript file
-wp_enqueue_script(
-    'plugin-js', 
-    plugin_dir_url( __FILE__ ) . 'js/accessibility-plugin.js',
-    array(),
-    '1.0',
-    true
-);
+```
+extension/
+├── manifest.json   # MV3, runs on <all_urls>
+├── content.js      # Toolbar + all features in a Shadow DOM
+├── background.js   # Service worker — install defaults, command handler
+├── popup.html/.js  # Browser action popup
+├── fonts/          # OpenDyslexic woff2
+└── icons/          # 16/48/128 PNGs
 ```
 
-### Core JavaScript Architecture
-- **IIFE Pattern**: Uses Immediately Invoked Function Expression to avoid global scope pollution
-- **Web Speech APIs**: Leverages `speechSynthesis` and `SpeechRecognition` for audio features
-- **State Management**: Maintains feature states (`EnableScreenReader`, `EnableKeyboardNavigation`, etc.)
-- **Browser Compatibility**: Includes fallbacks and feature detection
+The toolbar lives in a **Shadow DOM** so host-page CSS can't break it. Settings persist via `chrome.storage.sync` so they follow the user across sites and Chrome installs.
 
-### WordPress Integration
-- Hooks into `wp_enqueue_scripts` for proper script loading
-- Uses `wp_body_open` or `wp_head` for toolbar injection
-- Follows WordPress plugin standards and security practices
+### SPA support
 
-## Installation
+Most modern sites are single-page apps. The content script:
+- Patches `history.pushState` / `replaceState` to detect client-side navigation
+- Uses a `MutationObserver` to re-apply reading mode and re-attach the toolbar if a route change removes it
+
+---
+
+## WordPress Plugin
 
 ### Prerequisites
-- WordPress 5.0 or higher
-- PHP 7.4 or higher
-- Modern web browser with Web Speech API support
+- WordPress 5.0+
+- PHP 7.4+
+- A modern browser with Web Speech API support
 
-### Setup Instructions
+### Installation
 
-1. **Upload Plugin Files**
-   ```bash
-   # Upload the entire plugin directory to your WordPress plugins folder
-   wp-content/plugins/accessibility-plugin/
-   ```
+1. Upload the plugin folder to `wp-content/plugins/accessibility-plugin/`
+2. Activate from **Plugins** in the WordPress admin
+3. The toolbar appears automatically on every page
 
-2. **Activate the Plugin**
-   - Navigate to WordPress Admin → Plugins
-   - Find "Accessibility Plugin" and click "Activate"
+### File structure
 
-3. **Verify Installation**
-   - The accessibility toolbar should appear on your website
-   - JavaScript file is automatically enqueued via `script-enqueue.php`
-
-### File Structure
 ```
 accessibility-plugin/
-├── script-enqueue.php          # Main plugin file & script enqueuing
-├── js/
-│   └── accessibility-plugin.js # Core functionality
-├── templates/
-│   └── toolbar.php             # Accessibility toolbar UI
-└── README.md
+├── script-enqueue.php          # Plugin entry & script enqueuing
+├── js/accessibility-plugin.js  # Core functionality
+├── templates/toolbar.php       # Toolbar UI + CSS
+├── fonts/                      # OpenDyslexic font files
+└── images/                     # Toolbar icons
 ```
 
-## Usage
+---
 
-The plugin automatically adds an accessibility toolbar to your website. Users can:
-- Toggle individual accessibility features on/off
-- Adjust typography settings in real-time
-- Navigate using keyboard or voice commands
-- Experience enhanced screen reader functionality
+## Project history
 
+This started as a college capstone project: a WordPress accessibility plugin built for [Lasagna Love](https://lasagnalove.org/). It has since been rebuilt as a Chrome extension with:
 
+- Several bug fixes from the original (keyboard nav focus tracking, voice recognition error loops, post-load init)
+- A Shadow-DOM toolbar that can't be broken by host-page CSS
+- Real colorblind filters using SVG `feColorMatrix` instead of `hue-rotate` hacks
+- A reworked reading mode that handles nested modern layouts
+- New voice commands including `click <text>` for hands-free element activation
+- Cross-site settings sync via `chrome.storage.sync`
 
-## Project Goals
+---
 
-Create an intuitive, comprehensive accessibility solution that addresses diverse user needs through:
-- Advanced screen reading capabilities
-- Multi-modal navigation options
-- Visual accessibility enhancements
-- WCAG compliance standards
-- Seamless WordPress integration
+## Roadmap
+
+- [ ] Real PNG icons in the Chrome Web Store listing
+- [ ] Firefox build (manifest is mostly compatible)
+- [ ] AI-powered alt text for images (Claude/GPT vision)
+- [ ] AI page summarization for cognitive accessibility
+- [ ] More voice languages
+
+---
+
+## License
+
+MIT
