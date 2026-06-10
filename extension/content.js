@@ -35,15 +35,42 @@
 
   let settings = { ...DEFAULTS };
   let host, shadow;
+  let orphaned = false;
+
+  // When the extension is reloaded/updated/disabled, content scripts already
+  // running in open tabs get orphaned: their chrome.* APIs are severed and any
+  // call throws "Extension context invalidated." Detect that and go quiet
+  // instead of spamming the console; the next fresh page load runs clean.
+  function extValid() {
+    return !orphaned && !!(chrome.runtime && chrome.runtime.id);
+  }
+  function handleOrphan() {
+    if (orphaned) return;
+    orphaned = true;
+    try { observer && observer.disconnect(); } catch {}
+    try { kbd.disable(); } catch {}
+    try { voice.stop(); } catch {}
+    try { screenReader.disableHover(); screenReader.stop(); } catch {}
+  }
 
   // ─── Storage helpers ────────────────────────────────────────────────
   async function loadSettings() {
-    const stored = await chrome.storage.sync.get(STORAGE_KEYS);
-    settings = { ...DEFAULTS, ...stored };
+    if (!extValid()) return;
+    try {
+      const stored = await chrome.storage.sync.get(STORAGE_KEYS);
+      settings = { ...DEFAULTS, ...stored };
+    } catch {
+      handleOrphan();
+    }
   }
   function saveSetting(key, value) {
     settings[key] = value;
-    chrome.storage.sync.set({ [key]: value });
+    if (!extValid()) return handleOrphan();
+    try {
+      chrome.storage.sync.set({ [key]: value });
+    } catch {
+      handleOrphan();
+    }
   }
 
   // ─── Style application (uses html element + !important to beat sites) ──
@@ -56,15 +83,17 @@
       (document.head || document.documentElement).appendChild(styleEl);
     }
 
+    const regUrl = extValid() ? chrome.runtime.getURL('fonts/OpenDyslexic-Regular.woff2') : '';
+    const boldUrl = extValid() ? chrome.runtime.getURL('fonts/OpenDyslexic-Bold.woff2') : '';
     const fontFaces = `
       @font-face {
         font-family: 'OpenDyslexic';
-        src: url('${chrome.runtime.getURL('fonts/OpenDyslexic-Regular.woff2')}') format('woff2');
+        src: url('${regUrl}') format('woff2');
         font-weight: normal; font-style: normal; font-display: swap;
       }
       @font-face {
         font-family: 'OpenDyslexic';
-        src: url('${chrome.runtime.getURL('fonts/OpenDyslexic-Bold.woff2')}') format('woff2');
+        src: url('${boldUrl}') format('woff2');
         font-weight: bold; font-style: normal; font-display: swap;
       }
     `;
@@ -216,8 +245,59 @@
   }
 
   // ─── Screen reader (Web Speech API) ─────────────────────────────────
+  const norm = (s) => (s || '').replace(/\s+/g, ' ').trim();
+  // Tags that hold their own readable text (vs. generic layout containers).
+  const TEXT_TAGS = new Set([
+    'P', 'LI', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 'FIGCAPTION',
+    'TD', 'TH', 'DT', 'DD', 'CAPTION', 'SPAN', 'STRONG', 'EM', 'B', 'I',
+    'CODE', 'PRE', 'LABEL', 'TIME', 'SMALL', 'A',
+  ]);
+  // Pull the most meaningful label for the element under the pointer. Climbs to
+  // the nearest control/labelled ancestor so buttons read their name instead of
+  // an empty inner span, and skips giant containers so we don't read a whole
+  // section when the cursor is over a wrapper.
+  function readableText(el) {
+    if (!el || el.nodeType !== 1) return '';
+
+    // 1. Nearest interactive control → its accessible name.
+    const ctrl = el.closest(
+      'a[href], button, [role="button"], [role="link"], [role="menuitem"], [role="tab"], input, select, textarea, summary'
+    );
+    if (ctrl) {
+      const name = norm(
+        ctrl.getAttribute('aria-label') ||
+        ctrl.getAttribute('title') ||
+        ctrl.value ||
+        ctrl.innerText ||
+        ctrl.textContent
+      );
+      if (name) return name.slice(0, 300);
+    }
+
+    // 2. Image → alt/label.
+    if (el.tagName === 'IMG') return norm(el.alt || el.getAttribute('aria-label') || el.title);
+
+    // 3. Explicit label on the element or a close ancestor.
+    const labelled = el.closest('[aria-label], [title]');
+    if (labelled) {
+      const name = norm(labelled.getAttribute('aria-label') || labelled.getAttribute('title'));
+      if (name) return name.slice(0, 300);
+    }
+
+    // 4. Text-level element → its text.
+    if (TEXT_TAGS.has(el.tagName)) return norm(el.innerText || el.textContent).slice(0, 800);
+
+    // 5. Generic container → only read if it's a short bit of text, else skip.
+    const text = norm(el.innerText || el.textContent);
+    return text.length <= 140 ? text : '';
+  }
+
   const screenReader = {
     synth: window.speechSynthesis,
+    hoverBound: null,
+    leaveBound: null,
+    lastEl: null,
+    hoverTimer: null,
     speak(text) {
       if (!text || !this.synth) return;
       this.synth.cancel();
@@ -227,21 +307,57 @@
       this.synth.speak(u);
     },
     readEl(el) {
-      if (!el) return;
-      const text =
-        el.getAttribute?.('aria-label') ||
-        el.alt ||
-        el.title ||
-        el.innerText ||
-        el.textContent ||
-        '';
-      this.speak(text);
+      this.speak(readableText(el));
     },
     readPage() {
       const main =
         document.querySelector('main, [role="main"], article, #content, .content') ||
         document.body;
       this.speak(main.innerText || main.textContent || '');
+    },
+    // Announce where the user is — the page title and site. (We can't read the
+    // browser's address bar, but the page knows its own URL.)
+    readPageInfo() {
+      const title = norm(document.title) || 'Untitled page';
+      const site = location.hostname.replace(/^www\./, '');
+      this.speak(site ? `${title}. ${site}` : title);
+    },
+    // Hover-to-read: speak whatever the pointer rests on, after a short pause.
+    enableHover() {
+      if (this.hoverBound) return;
+      this.hoverBound = this.onHover.bind(this);
+      // Cancel any pending read when the pointer leaves the page or the tab
+      // loses focus, so it doesn't blurt out a section after you've moved away.
+      this.leaveBound = () => { clearTimeout(this.hoverTimer); this.lastEl = null; };
+      document.addEventListener('mouseover', this.hoverBound, true);
+      document.documentElement.addEventListener('mouseleave', this.leaveBound);
+      window.addEventListener('blur', this.leaveBound);
+      document.body?.classList.add('__a11y-hover-read');
+      this.speak('Screen reader on. Point at text to hear it.');
+    },
+    disableHover() {
+      if (this.hoverBound) document.removeEventListener('mouseover', this.hoverBound, true);
+      if (this.leaveBound) {
+        document.documentElement.removeEventListener('mouseleave', this.leaveBound);
+        window.removeEventListener('blur', this.leaveBound);
+      }
+      this.hoverBound = null;
+      this.leaveBound = null;
+      this.lastEl = null;
+      clearTimeout(this.hoverTimer);
+      document.body?.classList.remove('__a11y-hover-read');
+    },
+    onHover(e) {
+      const el = e.target;
+      // Over our own toolbar: cancel any pending read and bail.
+      if (host && host.contains(el)) { clearTimeout(this.hoverTimer); return; }
+      if (!el || el === this.lastEl) return;
+      clearTimeout(this.hoverTimer);
+      this.hoverTimer = setTimeout(() => {
+        this.lastEl = el;
+        const text = readableText(el);
+        if (text) this.speak(text);
+      }, 400);
     },
     stop() {
       this.synth?.cancel();
@@ -305,7 +421,10 @@
   // Inject keyboard-focus outline once
   (function injectFocusStyle() {
     const s = document.createElement('style');
-    s.textContent = `.__a11y-focused { outline: 3px solid #ff3860 !important; outline-offset: 2px !important; }`;
+    s.textContent = `
+      .__a11y-focused { outline: 3px solid #ff3860 !important; outline-offset: 2px !important; }
+      .__a11y-hover-read *:hover { cursor: help !important; }
+    `;
     (document.head || document.documentElement).appendChild(s);
   })();
 
@@ -363,6 +482,9 @@
       cmd('go back', () => history.back()) ||
       cmd('go forward', () => history.forward()) ||
       cmd('reload', () => location.reload()) ||
+      cmd('where am i', () => screenReader.readPageInfo()) ||
+      cmd('page info', () => screenReader.readPageInfo()) ||
+      cmd('read url', () => screenReader.readPageInfo()) ||
       cmd('read page', () => screenReader.readPage()) ||
       cmd('stop reading', () => screenReader.stop()) ||
       cmd('bigger text', () => actions.fontSize(10)) ||
@@ -427,6 +549,7 @@
       Object.entries(DEFAULTS).forEach(([k, v]) => saveSetting(k, v));
       kbd.disable();
       voice.stop();
+      screenReader.disableHover();
       screenReader.stop();
       applyAllStyles();
       updateUI();
@@ -436,8 +559,11 @@
   function onToggle(key) {
     if (key === 'keyboardNav') settings.keyboardNav ? kbd.init() : kbd.disable();
     if (key === 'voiceInput') settings.voiceInput ? voice.start() : voice.stop();
-    if (key === 'screenReader' && settings.screenReader) screenReader.readPage();
-    if (key === 'screenReader' && !settings.screenReader) screenReader.stop();
+    if (key === 'screenReader' && settings.screenReader) screenReader.enableHover();
+    if (key === 'screenReader' && !settings.screenReader) {
+      screenReader.disableHover();
+      screenReader.stop();
+    }
   }
 
   // ─── Toolbar UI (Shadow DOM, isolated from page CSS) ────────────────
@@ -445,47 +571,89 @@
     if (host) return;
     host = document.createElement('div');
     host.id = '__a11y-companion-host';
-    host.style.cssText = 'all: initial; position: fixed; bottom: 20px; right: 20px; z-index: 2147483647;';
+    host.style.cssText = 'all: initial; position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 2147483647;';
     shadow = host.attachShadow({ mode: 'open' });
     shadow.innerHTML = `
       <style>
         :host { all: initial; }
         .panel {
           font-family: -apple-system, system-ui, sans-serif;
-          background: #ffffff;
-          color: #111;
-          border-radius: 14px;
-          box-shadow: 0 10px 40px rgba(0,0,0,0.25);
-          width: 280px;
-          padding: 14px;
-          font-size: 14px;
-        }
-        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-        .title { font-weight: 600; font-size: 15px; }
-        .close { background: none; border: none; font-size: 18px; cursor: pointer; color: #666; }
-        button.btn {
-          all: unset;
-          display: block;
-          box-sizing: border-box;
-          width: 100%;
-          padding: 9px 12px;
-          margin: 5px 0;
-          background: #f1f5f9;
-          border-radius: 8px;
-          cursor: pointer;
-          text-align: left;
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 8px;
+          max-width: calc(100vw - 32px);
+          background: rgba(255,255,255,0.92);
+          backdrop-filter: saturate(1.4) blur(12px);
+          -webkit-backdrop-filter: saturate(1.4) blur(12px);
+          color: #0f172a;
+          border: 1px solid rgba(15,23,42,0.08);
+          border-radius: 16px;
+          box-shadow: 0 12px 40px rgba(15,23,42,0.22);
+          padding: 8px 10px;
           font-size: 13px;
         }
-        button.btn:hover { background: #e2e8f0; }
-        button.btn[aria-pressed="true"] { background: #2563eb; color: #fff; }
-        .row { display: flex; gap: 6px; }
-        .row .btn { text-align: center; }
-        select {
-          width: 100%; padding: 8px; margin: 6px 0; border-radius: 8px;
-          border: 1px solid #cbd5e1; background: #fff; font-size: 13px;
+        .brand {
+          font-size: 18px;
+          line-height: 1;
+          padding: 0 4px;
+          cursor: default;
+          user-select: none;
         }
-        label { font-size: 12px; color: #475569; margin-top: 8px; display: block; }
-        .reset { color: #dc2626; text-align: center !important; margin-top: 10px; }
+        .group { display: flex; align-items: center; gap: 4px; }
+        .divider { width: 1px; align-self: stretch; background: rgba(15,23,42,0.1); margin: 2px 2px; }
+        button.chip {
+          all: unset;
+          box-sizing: border-box;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 38px;
+          height: 38px;
+          padding: 0 9px;
+          background: #f1f5f9;
+          border-radius: 10px;
+          cursor: pointer;
+          font-size: 16px;
+          line-height: 1;
+          transition: background .15s, transform .05s;
+        }
+        button.chip:hover { background: #e2e8f0; }
+        button.chip:active { transform: scale(0.94); }
+        button.chip:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+        button.chip.label { font-size: 13px; font-weight: 600; }
+        button.chip[aria-pressed="true"] { background: #2563eb; color: #fff; }
+        button.chip.feat {
+          flex-direction: column;
+          gap: 2px;
+          min-width: 48px;
+          height: 44px;
+          padding: 4px 8px;
+          font-size: 15px;
+        }
+        .chip.feat .lbl {
+          font-size: 9px; font-weight: 600; line-height: 1;
+          letter-spacing: .2px; opacity: .7;
+        }
+        .chip.feat[aria-pressed="true"] .lbl { opacity: 1; }
+        #fontval {
+          min-width: 46px; font-size: 12px; font-weight: 600;
+          color: #475569; cursor: default; background: transparent;
+        }
+        #fontval:hover { background: transparent; }
+        select {
+          height: 38px; padding: 0 8px; border-radius: 10px;
+          border: 1px solid #cbd5e1; background: #fff; font-size: 12px;
+          color: #0f172a; cursor: pointer;
+        }
+        .close, .reset {
+          all: unset; box-sizing: border-box;
+          display: inline-flex; align-items: center; justify-content: center;
+          width: 34px; height: 38px; border-radius: 10px;
+          cursor: pointer; font-size: 16px; color: #64748b;
+        }
+        .close:hover { background: #f1f5f9; }
+        .reset:hover { background: #fee2e2; color: #dc2626; }
         .fab {
           width: 48px; height: 48px; border-radius: 50%;
           background: #2563eb; color: #fff; border: none;
@@ -494,34 +662,49 @@
         }
         .hidden { display: none; }
       </style>
-      <div class="panel" id="panel">
-        <div class="header">
-          <div class="title">A11y Companion</div>
-          <button class="close" id="close" aria-label="Hide toolbar">×</button>
+      <div class="panel" id="panel" role="toolbar" aria-label="A11y Companion">
+        <span class="brand" title="A11y Companion">♿</span>
+
+        <div class="group" aria-label="Text size">
+          <button class="chip label" data-act="font-" title="Smaller text" aria-label="Smaller text">A−</button>
+          <span id="fontval" title="Current text size">100%</span>
+          <button class="chip label" data-act="font+" title="Bigger text" aria-label="Bigger text">A+</button>
         </div>
 
-        <label>Text size</label>
-        <div class="row">
-          <button class="btn" data-act="font-">A−</button>
-          <button class="btn" id="fontval" disabled>100%</button>
-          <button class="btn" data-act="font+">A+</button>
+        <div class="divider"></div>
+
+        <div class="group" aria-label="Spacing">
+          <button class="chip label" data-act="space-" title="Less spacing" aria-label="Less spacing">⇿−</button>
+          <button class="chip label" data-act="space+" title="More spacing" aria-label="More spacing">⇿+</button>
         </div>
 
-        <label>Spacing</label>
-        <div class="row">
-          <button class="btn" data-act="space-">−</button>
-          <button class="btn" data-act="space+">+</button>
+        <div class="divider"></div>
+
+        <div class="group">
+          <button class="chip feat" id="t-dyslexiaFont" title="Dyslexia-friendly font" aria-label="Dyslexia-friendly font">
+            <span class="ico" style="font-weight:700;">Aa</span><span class="lbl">Font</span>
+          </button>
+          <button class="chip feat" id="t-readingMode" title="Reading mode" aria-label="Reading mode">
+            <span class="ico">📖</span><span class="lbl">Read</span>
+          </button>
+          <button class="chip feat" id="t-keyboardNav" title="Keyboard navigation" aria-label="Keyboard navigation">
+            <span class="ico">⌨️</span><span class="lbl">Keys</span>
+          </button>
+          <button class="chip feat" id="t-screenReader" title="Screen reader (hover to read)" aria-label="Screen reader, hover to read">
+            <span class="ico">🔊</span><span class="lbl">Speak</span>
+          </button>
+          <button class="chip feat" id="t-voiceInput" title="Voice commands" aria-label="Voice commands">
+            <span class="ico">🎤</span><span class="lbl">Voice</span>
+          </button>
+          <button class="chip feat" id="pageInfo" title="Read page title and URL" aria-label="Read page title and address">
+            <span class="ico">ℹ️</span><span class="lbl">Page</span>
+          </button>
         </div>
 
-        <button class="btn" id="t-dyslexiaFont">Dyslexia-friendly font</button>
-        <button class="btn" id="t-readingMode">Reading mode</button>
-        <button class="btn" id="t-keyboardNav">Keyboard navigation</button>
-        <button class="btn" id="t-screenReader">Screen reader</button>
-        <button class="btn" id="t-voiceInput">Voice commands</button>
+        <div class="divider"></div>
 
-        <label>Color mode</label>
-        <select id="colorMode">
-          <option value="default">Default</option>
+        <select id="colorMode" title="Color mode" aria-label="Color mode">
+          <option value="default">🎨 Default</option>
           <option value="grayscale">Grayscale</option>
           <option value="invert">Invert / Dark</option>
           <option value="high-contrast">High contrast</option>
@@ -530,20 +713,10 @@
           <option value="tritanopia">Tritanopia</option>
         </select>
 
-        <details style="margin-top:10px;">
-          <summary style="cursor:pointer;font-size:12px;color:#475569;">Voice commands</summary>
-          <div style="font-size:11px;color:#475569;line-height:1.6;padding:6px 0;">
-            "scroll down/up", "top/bottom of page",<br>
-            "read page", "stop reading",<br>
-            "bigger/smaller text", "reading mode",<br>
-            "dark mode", "high contrast", "default colors",<br>
-            "go back/forward", "reload",<br>
-            "next", "previous",<br>
-            <strong>"click [link text]"</strong> — e.g. "click sign in"
-          </div>
-        </details>
+        <div class="divider"></div>
 
-        <button class="btn reset" id="reset">Reset all</button>
+        <button class="reset" id="reset" title="Reset all" aria-label="Reset all settings">↺</button>
+        <button class="close" id="close" title="Hide toolbar" aria-label="Hide toolbar">×</button>
       </div>
       <button class="fab hidden" id="fab" aria-label="Show accessibility toolbar">♿</button>
     `;
@@ -569,6 +742,8 @@
       $('#t-' + k).onclick = () => actions.toggle(k);
     });
 
+    $('#pageInfo').onclick = () => screenReader.readPageInfo();
+
     $('#colorMode').onchange = (e) => actions.setColor(e.target.value);
   }
 
@@ -592,6 +767,7 @@
     updateUI();
     if (settings.keyboardNav) kbd.init();
     if (settings.voiceInput) voice.start();
+    if (settings.screenReader) screenReader.enableHover();
   }
 
   chrome.storage.onChanged.addListener((changes, area) => {

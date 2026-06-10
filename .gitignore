@@ -16,3 +16,6 @@ Thumbs.db
 # Node
 node_modules/
 npm-debug.log*
+
+# Build artifacts (store submission zips)
+*.zip
